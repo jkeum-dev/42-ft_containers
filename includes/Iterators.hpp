@@ -92,7 +92,11 @@ namespace ft {
 			reverse_iterator  operator++(int);
 			reverse_iterator& operator+= (difference_type n);
 			reverse_iterator operator- (difference_type n) const;
-			
+			reverse_iterator& operator--();
+			reverse_iterator  operator--(int);
+			reverse_iterator& operator-= (difference_type n);
+			pointer operator->() const;
+			reference operator[] (difference_type n) const;
 	};
 
 }	// namespace ft
