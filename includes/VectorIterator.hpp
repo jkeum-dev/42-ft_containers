@@ -16,77 +16,77 @@ namespace ft
 		typedef typename ft::iterator<ft::random_access_iterator_tag, T>::pointer						pointer;
 		typedef typename ft::iterator<ft::random_access_iterator_tag, T>::reference					reference;
 
-		VectorIterator(pointer ptr = ft_nullptr) : _ptr(ptr) {}					// Default constructor
-		VectorIterator(const VectorIterator& copy) : _ptr(copy._ptr) {}	// Copy constructor
-		VectorIterator& operator=(const VectorIterator& copy) { if (this != copy) this->_ptr = copy._ptr; return *this; }	// Assignment operator
+		VectorIterator(pointer ptr = ft_nullptr) : _current(ptr) {}					// Default constructor
+		VectorIterator(const VectorIterator& copy) : _current(copy._current) {}	// Copy constructor
+		VectorIterator& operator=(const VectorIterator& copy) { if (this != copy) this->_current = copy._current; return *this; }	// Assignment operator
 		virtual ~VectorIterator() {}	// Destructor
-		pointer const & getPtr() const { return _ptr; }	// getter
+		pointer const & base() const { return _current; }	// getter
 		/**
 		 * operators
 		**/
-		reference operator*() const { return *_ptr;}
-		pointer operator->() const { return _ptr; }
-		VectorIterator& operator++() { ++_ptr; return *this; }
-		VectorIterator operator++(int) { VectorIterator tmp = *this; ++_ptr; return tmp; }
-		VectorIterator& operator--() { --_ptr; return *this; }
-		VectorIterator operator--(int) { VectorIterator tmp = *this; --_ptr; return tmp; }
-		VectorIterator operator+(difference_type n) const { return _ptr + n; }	// iter + n
-		VectorIterator operator-(difference_type n) const { return _ptr - n; }	// iter - n
-		VectorIterator& operator+=(difference_type n) { _ptr += n; return *this; }
-		VectorIterator& operator-=(difference_type n) { _ptr -= n; return *this; }
-		reference operator[](difference_type n) const { return *(_ptr + n); }
+		reference operator*() const { return *_current;}
+		pointer operator->() const { return _current; }
+		VectorIterator& operator++() { ++_current; return *this; }
+		VectorIterator operator++(int) { VectorIterator tmp = *this; ++_current; return tmp; }
+		VectorIterator& operator--() { --_current; return *this; }
+		VectorIterator operator--(int) { VectorIterator tmp = *this; --_current; return tmp; }
+		VectorIterator operator+(difference_type n) const { return _current + n; }	// iter + n
+		VectorIterator operator-(difference_type n) const { return _current - n; }	// iter - n
+		VectorIterator& operator+=(difference_type n) { _current += n; return *this; }
+		VectorIterator& operator-=(difference_type n) { _current -= n; return *this; }
+		reference operator[](difference_type n) const { return *(_current + n); }
 
 	private :
-		pointer _ptr;
+		pointer _current;
 	};
 
 	/**
 	 * operators
 	**/
 	template <typename T>
-	bool operator==(const ft::VectorIterator<T> lIter, const ft::VectorIterator<T> rIter) { return lIter.getPtr() == rIter.getPtr(); }
+	bool operator==(const ft::VectorIterator<T> lIter, const ft::VectorIterator<T> rIter) { return lIter.base() == rIter.base(); }
 	
 	template <typename T, typename T_c>	// compare with const_iterator
-	bool operator==(const ft::VectorIterator<T> lIter, const ft::VectorIterator<T_c> rIter) { return lIter.getPtr() == rIter.getPtr(); }
+	bool operator==(const ft::VectorIterator<T> lIter, const ft::VectorIterator<T_c> rIter) { return lIter.base() == rIter.base(); }
 	
 	template <typename T>
-	bool operator!=(const ft::VectorIterator<T> lIter, const ft::VectorIterator<T> rIter) { return lIter.getPtr() != rIter.getPtr(); }
+	bool operator!=(const ft::VectorIterator<T> lIter, const ft::VectorIterator<T> rIter) { return lIter.base() != rIter.base(); }
 	
 	template <typename T, typename T_c>	// compare with const_iterator
-	bool operator!=(const ft::VectorIterator<T> lIter, const ft::VectorIterator<T_c> rIter) { return lIter.getPtr() != rIter.getPtr(); }
+	bool operator!=(const ft::VectorIterator<T> lIter, const ft::VectorIterator<T_c> rIter) { return lIter.base() != rIter.base(); }
 	
 	template <typename T>
-	bool operator<(const ft::VectorIterator<T> lIter, const ft::VectorIterator<T> rIter) { return lIter.getPtr() < rIter.getPtr(); }
+	bool operator<(const ft::VectorIterator<T> lIter, const ft::VectorIterator<T> rIter) { return lIter.base() < rIter.base(); }
 	
 	template <typename T, typename T_c>	// compare with const_iterator
-	bool operator<(const ft::VectorIterator<T> lIter, const ft::VectorIterator<T_c> rIter) { return lIter.getPtr() < rIter.getPtr(); }
+	bool operator<(const ft::VectorIterator<T> lIter, const ft::VectorIterator<T_c> rIter) { return lIter.base() < rIter.base(); }
 	
 	template <typename T>
-	bool operator>(const ft::VectorIterator<T> lIter, const ft::VectorIterator<T> rIter) { return lIter.getPtr() > rIter.getPtr(); }
+	bool operator>(const ft::VectorIterator<T> lIter, const ft::VectorIterator<T> rIter) { return lIter.base() > rIter.base(); }
 	
 	template <typename T, typename T_c>	// compare with const_iterator
-	bool operator>(const ft::VectorIterator<T> lIter, const ft::VectorIterator<T_c> rIter) { return lIter.getPtr() > rIter.getPtr(); }
+	bool operator>(const ft::VectorIterator<T> lIter, const ft::VectorIterator<T_c> rIter) { return lIter.base() > rIter.base(); }
 	
 	template <typename T>
-	bool operator<=(const ft::VectorIterator<T> lIter, const ft::VectorIterator<T> rIter) { return lIter.getPtr() <= rIter.getPtr(); }
+	bool operator<=(const ft::VectorIterator<T> lIter, const ft::VectorIterator<T> rIter) { return lIter.base() <= rIter.base(); }
 	
 	template <typename T, typename T_c>	// compare with const_iterator
-	bool operator<=(const ft::VectorIterator<T> lIter, const ft::VectorIterator<T_c> rIter) { return lIter.getPtr() <= rIter.getPtr(); }
+	bool operator<=(const ft::VectorIterator<T> lIter, const ft::VectorIterator<T_c> rIter) { return lIter.base() <= rIter.base(); }
 	
 	template <typename T>
-	bool operator>=(const ft::VectorIterator<T> lIter, const ft::VectorIterator<T> rIter) { return lIter.getPtr() >= rIter.getPtr(); }
+	bool operator>=(const ft::VectorIterator<T> lIter, const ft::VectorIterator<T> rIter) { return lIter.base() >= rIter.base(); }
 	
 	template <typename T, typename T_c>	// compare with const_iterator
-	bool operator>=(const ft::VectorIterator<T> lIter, const ft::VectorIterator<T_c> rIter) { return lIter.getPtr() >= rIter.getPtr(); }
+	bool operator>=(const ft::VectorIterator<T> lIter, const ft::VectorIterator<T_c> rIter) { return lIter.base() >= rIter.base(); }
 
 	template <typename T>	// n + iter
 	ft::VectorIterator<T> operator+(typename ft::VectorIterator<T>::difference_type n, const ft::VectorIterator<T> &iter) { return iter + n; }
 
 	template <typename T>	// iterator - iterator
-	typename ft::VectorIterator<T>::difference_type operator-(const ft::VectorIterator<T> &lIter, const ft::VectorIterator<T> &rIter) { return lIter.getPtr() - rIter.getPtr(); }
+	typename ft::VectorIterator<T>::difference_type operator-(const ft::VectorIterator<T> &lIter, const ft::VectorIterator<T> &rIter) { return lIter.base() - rIter.base(); }
 
 	template <typename T, typename T_c>	// iterator - const_iterator
-	typename ft::VectorIterator<T>::difference_type operator-(const ft::VectorIterator<T> &lIter, const ft::VectorIterator<T_c> &rIter) { return lIter.getPtr() - rIter.getPtr(); }
+	typename ft::VectorIterator<T>::difference_type operator-(const ft::VectorIterator<T> &lIter, const ft::VectorIterator<T_c> &rIter) { return lIter.base() - rIter.base(); }
 }	// namespace ft
 
 #endif
