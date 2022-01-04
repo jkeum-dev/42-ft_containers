@@ -30,8 +30,8 @@ namespace ft
 		VectorIterator operator++(int) { VectorIterator tmp = *this; ++_current; return tmp; }
 		VectorIterator& operator--() { --_current; return *this; }
 		VectorIterator operator--(int) { VectorIterator tmp = *this; --_current; return tmp; }
-		VectorIterator operator+(difference_type n) const { return _current + n; }	// iter + n
-		VectorIterator operator-(difference_type n) const { return _current - n; }	// iter - n
+		VectorIterator operator+(difference_type n) const { return VectorIterator(_current + n); }	// iter + n
+		VectorIterator operator-(difference_type n) const { return VectorIterator(_current - n); }	// iter - n
 		VectorIterator& operator+=(difference_type n) { _current += n; return *this; }
 		VectorIterator& operator-=(difference_type n) { _current -= n; return *this; }
 		reference operator[](difference_type n) const { return *(_current + n); }
@@ -80,7 +80,7 @@ namespace ft
 	bool operator>=(const ft::VectorIterator<T>& lIter, const ft::VectorIterator<T_c>& rIter) { return lIter.base() >= rIter.base(); }
 
 	template <typename T>	// n + iter
-	ft::VectorIterator<T> operator+(typename ft::VectorIterator<T>::difference_type n, const ft::VectorIterator<T> &iter) { return iter + n; }
+	ft::VectorIterator<T> operator+(typename ft::VectorIterator<T>::difference_type n, const ft::VectorIterator<T> &iter) { return ft::VectorIterator<T>(iter + n); }
 
 	template <typename T>	// iterator - iterator
 	typename ft::VectorIterator<T>::difference_type operator-(const ft::VectorIterator<T>& lIter, const ft::VectorIterator<T>& rIter) { return lIter.base() - rIter.base(); }
