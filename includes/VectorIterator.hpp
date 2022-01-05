@@ -18,7 +18,7 @@ namespace ft
 
 		VectorIterator(pointer ptr = ft_nullptr) : _current(ptr) {}					// Default constructor
 		VectorIterator(const VectorIterator& copy) : _current(copy._current) {}	// Copy constructor
-		VectorIterator& operator=(const VectorIterator& copy) { if (this != copy) this->_current = copy._current; return *this; }	// Assignment operator
+		VectorIterator& operator=(const VectorIterator& copy) { if (this != &copy) this->_current = copy._current; return *this; }	// Assignment operator
 		virtual ~VectorIterator() {}	// Destructor
 		pointer const & base() const { return _current; }	// getter
 		/**
