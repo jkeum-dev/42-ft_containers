@@ -6,12 +6,19 @@
 
 namespace ft
 {
+	/**
+	 * @brief vector class
+	 * 
+	 * @tparam T 
+	 * @tparam Alloc 
+	 */
 	template < class T, class Alloc = std::allocator<T> >
 	class vector {
 	public:
 		/**
-		 * Member types
-		**/
+		 * @brief Member types
+		 * https://www.cplusplus.com/reference/vector/vector/
+		 */
 		typedef T																					value_type;
 		typedef Alloc																			allocator_type;
 		typedef typename allocator_type::reference				reference;
@@ -26,17 +33,63 @@ namespace ft
 		typedef typename allocator_type::size_type				size_type;
 
 		/**
-		 * Member functions
-		**/
-		explicit vector(const allocator_type& alloc = allocator_type());	// Default constructor
+		 * @brief Member functions
+		 * https://www.cplusplus.com/reference/vector/vector/
+		 */
+		explicit vector(const allocator_type& alloc = allocator_type())
+		: _alloc(alloc), _start(ft_nullptr), _finish(ft_nullptr) {}	// Default constructor
 		explicit vector(size_type n, const value_type& val = value_type(),
-										const allocator_type& alloc = allocator_type());	// Fill constructor
-		template <class VectorIterator>
-		vector(VectorIterator first, VectorIterator last,
-					const allocator_type& alloc = allocator_type());	// Range constructor
-		vector(const vector& x);	// Copy constructor
-		~vector();	// Destructor
-		vector& operator=(const vector& x);	// Assignment operator
+										const allocator_type& alloc = allocator_type())
+		: _alloc(alloc), _start(ft_nullptr), _finish(ft_nullptr) {
+			_start = _alloc.allocate(n);
+			_finish = _start;
+			while (n--) {
+				_alloc.construct(_finish, val);
+				_finish++;
+			}
+		}	// Fill constructor
+		template <class InputIterator>
+		vector(InputIterator first, InputIterator last,
+					const allocator_type& alloc = allocator_type())
+		: _alloc(alloc), _start(ft_nullptr), _finish(ft_nullptr) {
+			// difference_type n = 0;
+			// InputIterator tmp = first;
+			// while(tmp != last) {
+			// 	tmp++;
+			// 	n++;
+			// }
+			difference_type n = last - first;
+			_start = _alloc.allocate(n);
+			_finish = _start;
+			while (n--) {
+				_alloc.construct(_finish, *first);
+				_finish++;
+				first++;
+			}
+		}	// Range constructor
+		vector(const vector& x)
+		: _alloc(x._alloc), _start(ft_nullptr), _finish(ft_nullptr) {
+			difference_type n = x._finish - x._start;
+			_start = _alloc.allocate(n);
+			_finish = _start;
+			pointer tmp = x._start;
+			while (n--) {
+				_alloc.construct(_finish, *tmp);
+				_finish++;
+				tmp++;
+			}
+		}	// Copy constructor
+		~vector() {
+			clear();
+			_alloc.deallocate(_start, _finish - _start);
+		}	// Destructor
+		vector& operator=(const vector& x) {
+			if (this != &x) {
+				this->clear();
+				this->assign(x.begin(), x.end());
+			}
+			return *this;
+		}	// Assignment operator
 		// Iterators:
 		iterator 				begin();
 		const_iterator	begin() const;
@@ -78,6 +131,14 @@ namespace ft
 		void clear();
 		// Allocator:
 		allocator_type get_allocator() const;
+
+		/**
+		 * @brief Member variables
+		 */
+	private:
+		allocator_type	_alloc;
+		pointer					_start;
+		pointer					_finish;
 	};
 
 	// Relational operators
