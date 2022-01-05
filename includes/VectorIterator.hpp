@@ -22,8 +22,8 @@ namespace ft
 		virtual ~VectorIterator() {}	// Destructor
 		pointer const & base() const { return _current; }	// getter
 		/**
-		 * operators
-		**/
+		 * @brief operators
+		 */
 		reference operator*() const { return *_current;}
 		pointer operator->() const { return _current; }
 		VectorIterator& operator++() { ++_current; return *this; }
@@ -41,8 +41,8 @@ namespace ft
 	};
 
 	/**
-	 * operators
-	**/
+	 * @brief operators
+	 */
 	template <typename T>
 	bool operator==(const ft::VectorIterator<T>& lIter, const ft::VectorIterator<T>& rIter) { return lIter.base() == rIter.base(); }
 	

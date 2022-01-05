@@ -18,8 +18,8 @@ namespace ft {
 	struct random_access_iterator_tag : public bidirectional_iterator_tag {};	// Random-access iterators support a superset of bidirectional iterator operations.
 
 	/**
-	 * iterator traits
-	**/
+	 * @brief iterator traits
+	 */
 	template <class T>
 	struct iterator_traits {
 		typedef typename T::value_type				value_type;
@@ -48,8 +48,8 @@ namespace ft {
 	};
 
 	/**
-	 * iterator
-	**/
+	 * @brief iterator
+	 */
 	template<class Category, class T, class Distance = ptrdiff_t,
 					class Pointer = T*, class Reference = T&>
 	struct iterator
@@ -62,8 +62,9 @@ namespace ft {
 	};
 
 	/**
-	 * reverse iterator
-	**/
+	 * @brief reverse iterator
+	 * https://www.cplusplus.com/reference/iterator/reverse_iterator/
+	 */
 	template <typename Iterator>
 	class reverse_iterator
 		: public iterator<typename iterator_traits<Iterator>::iterator_category,
@@ -79,8 +80,8 @@ namespace ft {
 		typedef Iterator	iterator_type;
 
 		/**
-		 * Member functions
-		**/
+		 * @brief Member functions
+		 */
 		reverse_iterator() : current() {}	// (1) default constructor
 		explicit reverse_iterator(iterator_type it) : current(it) {}	// (2) initalization constructor
 		template <class Iter>
@@ -100,7 +101,7 @@ namespace ft {
 	};
 
 	/**
-	 * operators
+	 * @brief Non-member function overloads
 	**/
 	template <typename Iterator>
 	bool operator==(const ft::reverse_iterator<Iterator>& lIter, const ft::reverse_iterator<Iterator>& rIter) { return lIter.base() == rIter.base(); }
