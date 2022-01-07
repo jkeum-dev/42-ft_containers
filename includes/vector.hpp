@@ -91,14 +91,14 @@ namespace ft
 			return *this;
 		}	// Assignment operator
 		// Iterators:
-		iterator 				begin();
-		const_iterator	begin() const;
-		iterator				end();
-		const_iterator	end() const;
-		reverse_iterator				rbegin();
-		const_reverse_iterator	rbegin() const;
-		reverse_iterator				rend();
-		const_reverse_iterator	rend() const;
+		iterator 				begin() { return _start; }
+		const_iterator	begin() const { return _start; }
+		iterator				end() { return _finish; }
+		const_iterator	end() const { return _finish; }
+		reverse_iterator				rbegin() { return reverse_iterator(end()); }
+		const_reverse_iterator	rbegin() const { return const_reverse_iterator(end()); }
+		reverse_iterator				rend() { return reverse_iterator(begin()); }
+		const_reverse_iterator	rend() const { return const_reverse_iterator(begin()); }
 		// Capacity:
 		size_type	size() const;
 		size_type	max_size() const;
