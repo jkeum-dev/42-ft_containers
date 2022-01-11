@@ -2,6 +2,7 @@
 #define VECTOR_HPP
 
 #include <memory>
+#include <stdexcept>
 #include "VectorIterator.hpp"
 
 namespace ft
@@ -100,21 +101,49 @@ namespace ft
 		reverse_iterator				rend() { return reverse_iterator(begin()); }
 		const_reverse_iterator	rend() const { return const_reverse_iterator(begin()); }
 		// Capacity:
-		size_type	size() const;
-		size_type	max_size() const;
-		void			resize(size_type n, value_type val = value_type());
+		size_type	size() const { return size_type(_finish - _start); }
+		size_type	max_size() const { return _alloc.max_size(); }
+		void			resize(size_type n, value_type val = value_type()) {
+			if (n < size())
+				erase(_start + n, _finish);
+			else if (n > size())
+				insert(_finish, n - size(), val);
+		}
 		size_type	capacity() const;
-		bool			empty() const;
-		void			reserve(size_type n);
+		bool			empty() const { return _start == _finish;}
+		void			reserve(size_type n) {
+			if (n > max_size())
+				throw std::length_error("Vector reserve error");
+			else if (n > capacity()) {
+				// vector res(n);
+				// int i = -1;
+				// while (++i < size())
+				// 	res[i] = (*this)[i];
+				// while (i < n)
+				// 	res[i] = value_type();
+				assign(_start, _finish);
+				int i = _finish - _start;
+				insert(_finish, n - i, value_type());
+			}
+			~vector();
+		}
 		// Element access:
-		reference 			operator[](size_type n);
-		const_reference	operator[](size_type n) const;
-		reference				at(size_type n);
-		const_reference	at(size_type n);
-		reference				front();
-		const_reference	front() const;
-		reference				back();
-		const_reference	back() const;
+		reference 			operator[](size_type n) { return *(_start + n); }
+		const_reference	operator[](size_type n) const { return *(_start + n); }
+		reference				at(size_type n) {
+			if (n >= size())
+				throw std::out_of_range("Vector at error");
+			return (*this)[n];
+		}
+		const_reference	at(size_type n) {
+			if (n >= size())
+				throw std::out_of_range("Vector at error");
+			return (*this)[n];
+		}
+		reference				front() { return *_start; }
+		const_reference	front() const { return *_start; }
+		reference				back() { return *(_finish - 1); }
+		const_reference	back() const { return *(_finish - 1); }
 		// Modifiers:
 		template <class VectorIterator>
 		void assign(VectorIterator first, VectorIterator last);	// range
