@@ -45,10 +45,8 @@ namespace ft
 			_start = _alloc.allocate(n);
 			_finish = _start;
 			_end_of_storage = _start + n;
-			while (n--) {
-				_alloc.construct(_finish, val);
-				_finish++;
-			}
+			while (n--)
+				_alloc.construct(_finish++, val);
 		}	// Fill constructor
 		template <class InputIterator>
 		vector(InputIterator first, InputIterator last,
@@ -64,11 +62,8 @@ namespace ft
 			_start = _alloc.allocate(n);
 			_finish = _start;
 			_end_of_storage = _start + n;
-			while (n--) {
-				_alloc.construct(_finish, *first);
-				_finish++;
-				first++;
-			}
+			while (n--)
+				_alloc.construct(_finish++, *first++);
 		}	// Range constructor
 		vector(const vector& x)
 		: _alloc(x._alloc), _start(ft_nullptr), _finish(ft_nullptr), _end_of_storage(ft_nullptr) {
@@ -77,11 +72,8 @@ namespace ft
 			_finish = _start;
 			_end_of_storage = _start + n;
 			pointer tmp = x._start;
-			while (n--) {
-				_alloc.construct(_finish, *tmp);
-				_finish++;
-				tmp++;
-			}
+			while (n--)
+				_alloc.construct(_finish++, *tmp++);
 		}	// Copy constructor
 		~vector() {
 			clear();
@@ -118,17 +110,11 @@ namespace ft
 			if (n > max_size())
 				throw std::length_error("Vector reserve error");
 			else if (n > capacity()) {
-				// vector res(n);
-				// int i = -1;
-				// while (++i < size())
-				// 	res[i] = (*this)[i];
-				// while (i < n)
-				// 	res[i] = value_type();
 				assign(_start, _finish);
-				int i = _finish - _start;
+				size_type i = _finish - _start;
 				insert(_finish, n - i, value_type());
 			}
-			~vector();
+			// ~vector();
 		}
 		// Element access:
 		reference 			operator[](size_type n) { return *(_start + n); }
@@ -149,20 +135,163 @@ namespace ft
 		const_reference	back() const { return *(_finish - 1); }
 		// Modifiers:
 		template <class VectorIterator>
-		void assign(VectorIterator first, VectorIterator last);	// range
-		void assign(size_type n, const value_type& val);	// fill
-		void push_back(const value_type& val);
-		void pop_back();
-		iterator	insert(iterator position, const value_type& val);	// single element
-		void			insert(iterator position, size_type n, const value_type& val);	// fill
+		void assign(VectorIterator first, VectorIterator last) {
+			clear();
+			size_type n = last - first;
+			if (n <= capacity()) {
+				while (n--)
+					_alloc.construct(_finish++, *first++);
+			}
+			else {
+				pointer start = _start;
+				pointer end_of_storage = _end_of_storage;
+				_start = _alloc.allocate(n);
+				_finish = _start;
+				_end_of_storage = _start + n;
+				while (n--)
+					_alloc.construct(_finish++, *first++);
+				_alloc.deallocate(start, end_of_storage - start);
+			}
+		}	// range
+		void assign(size_type n, const value_type& val) {
+			clear();
+			if (n <= capacity()) {
+				while (n--)
+					_alloc.construct(_finish++, val);
+			}
+			else {
+				pointer start = _start;
+				pointer end_of_storage = _end_of_storage;
+				_start = _alloc.allocate(n);
+				_finish = _start;
+				_end_of_storage = _start + n;
+				while (n--)
+					_alloc.construct(_finish++, val);
+				_alloc.deallocate(start, end_of_storage - start);
+			}
+		}	// fill
+		void push_back(const value_type& val) {
+			if (_finish == _end_of_storage) {
+				if (size() == 0)
+					resize(1);
+				else
+					resize(capacity() * 2);
+			}
+			_alloc.construct(_finish++, val);
+		}
+		void pop_back() { _alloc.destroy(--_finish); }
+		iterator	insert(iterator position, const value_type& val) {
+			insert(position, 1, val);
+			return position;
+		}	// single element
+		void			insert(iterator position, size_type n, const value_type& val) {
+			if (size() + n <= capacity()) {
+				pointer val_tmp = _finish;
+				size_type range = _finish - position;
+				_finish += n;
+				pointer tmp = _finish;
+				while (range--)
+					_alloc.construct(--tmp, *(--val_tmp));
+				while (n--)
+					_alloc.construct(--tmp, val);
+			}
+			else {
+				pointer tmp = _start;
+				size_type size = n + size();
+				size_type front_part = position - _start;
+				size_type back_part = _finish - position - n;
+				_start = _alloc.allocate(size);
+				_finish = _start;
+				_end_of_storage = _start + size;
+				while (front_part--) {
+					_alloc.construct(_finish++, *tmp);
+					_alloc.destroy(tmp++);
+				}
+				while (n--)
+					_alloc.construct(_finish++, val);
+				while (back_part--) {
+					_alloc.construct(_finish++, *tmp);
+					_alloc.destroy(tmp++);
+				}
+			}
+		}	// fill
 		template <class VectorIterator>
-		void			insert(iterator position, VectorIterator first, VectorIterator last);	// range
-		iterator erase(iterator position);
-		iterator erase(iterator first, iterator last);	// range
-		void swap(vector& x);
-		void clear();
+		void			insert(iterator position, VectorIterator first, VectorIterator last) {
+			size_type n = last - first;
+			if (size() + n <= capacity()) {
+				pointer val_tmp = _finish;
+				size_type range = _finish - position;
+				_finish += n;
+				pointer tmp = _finish;
+				while (range--)
+					_alloc.construct(--tmp, *(--val_tmp));
+				while (n--)
+					_alloc.construct(--tmp, *first++);
+			}
+			else {
+				pointer tmp = _start;
+				size_type size = n + size();
+				size_type front_part = position - _start;
+				size_type back_part = _finish - position - n;
+				_start = _alloc.allocate(size);
+				_finish = _start;
+				_end_of_storage = _start + size;
+				while (front_part--) {
+					_alloc.construct(_finish++, *tmp);
+					_alloc.destroy(tmp++);
+				}
+				while (n--)
+					_alloc.construct(_finish++, *first++);
+				while (back_part--) {
+					_alloc.construct(_finish++, *tmp);
+					_alloc.destroy(tmp++);
+				}
+			}
+		}	// range
+		iterator erase(iterator position) {
+			_alloc.destroy(position);
+			size_type n = _finish - position - 1;
+			pointer tmp = position;
+			while (n--) {
+				_alloc.construct(tmp, *(tmp + 1));
+				_alloc.destroy(tmp++);
+			}
+			--_finish;
+			return position;
+		}
+		iterator erase(iterator first, iterator last) {
+			pointer tmp = first;
+			while (tmp < last)
+				_alloc.destroy(tmp++);
+			size_type n = _finish - last;
+			size_type range = last - first;
+			tmp = first;
+			while (n--) {
+				_alloc.construct(tmp, *last++);
+				_alloc.destroy(tmp++);
+			}
+			_finish -= range;
+			return first;
+		}	// range
+		void swap(vector& x) {
+			allocator_type tmp_alloc = x._alloc;
+			pointer tmp_start = x._start;
+			pointer tmp_finish = x._finish;
+			pointer tmp_end_of_storage = x._end_of_storage;
+
+			x._alloc = _alloc;
+			x._start = _start;
+			x._finish = _finish;
+			x._end_of_storage = _end_of_storage;
+
+			_alloc = tmp_alloc;
+			_start = tmp_start;
+			_finish = tmp_finish;
+			_end_of_storage = tmp_end_of_storage;
+		}
+		void clear() { while (_start < end) _alloc.destroy(_start++); }
 		// Allocator:
-		allocator_type get_allocator() const;
+		allocator_type get_allocator() const { return _alloc; }
 
 		/**
 		 * @brief Member variables
