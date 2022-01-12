@@ -38,12 +38,13 @@ namespace ft
 		 * https://www.cplusplus.com/reference/vector/vector/
 		 */
 		explicit vector(const allocator_type& alloc = allocator_type())
-		: _alloc(alloc), _start(ft_nullptr), _finish(ft_nullptr) {}	// Default constructor
+		: _alloc(alloc), _start(ft_nullptr), _finish(ft_nullptr), _end_of_storage(ft_nullptr) {}	// Default constructor
 		explicit vector(size_type n, const value_type& val = value_type(),
 										const allocator_type& alloc = allocator_type())
-		: _alloc(alloc), _start(ft_nullptr), _finish(ft_nullptr) {
+		: _alloc(alloc), _start(ft_nullptr), _finish(ft_nullptr), _end_of_storage(ft_nullptr) {
 			_start = _alloc.allocate(n);
 			_finish = _start;
+			_end_of_storage = _start + n;
 			while (n--) {
 				_alloc.construct(_finish, val);
 				_finish++;
@@ -52,7 +53,7 @@ namespace ft
 		template <class InputIterator>
 		vector(InputIterator first, InputIterator last,
 					const allocator_type& alloc = allocator_type())
-		: _alloc(alloc), _start(ft_nullptr), _finish(ft_nullptr) {
+		: _alloc(alloc), _start(ft_nullptr), _finish(ft_nullptr), _end_of_storage(ft_nullptr) {
 			// difference_type n = 0;
 			// InputIterator tmp = first;
 			// while(tmp != last) {
@@ -62,6 +63,7 @@ namespace ft
 			difference_type n = last - first;
 			_start = _alloc.allocate(n);
 			_finish = _start;
+			_end_of_storage = _start + n;
 			while (n--) {
 				_alloc.construct(_finish, *first);
 				_finish++;
@@ -69,10 +71,11 @@ namespace ft
 			}
 		}	// Range constructor
 		vector(const vector& x)
-		: _alloc(x._alloc), _start(ft_nullptr), _finish(ft_nullptr) {
+		: _alloc(x._alloc), _start(ft_nullptr), _finish(ft_nullptr), _end_of_storage(ft_nullptr) {
 			difference_type n = x._finish - x._start;
 			_start = _alloc.allocate(n);
 			_finish = _start;
+			_end_of_storage = _start + n;
 			pointer tmp = x._start;
 			while (n--) {
 				_alloc.construct(_finish, *tmp);
@@ -109,7 +112,7 @@ namespace ft
 			else if (n > size())
 				insert(_finish, n - size(), val);
 		}
-		size_type	capacity() const;
+		size_type	capacity() const { return size_type(_end_of_storage - _start); }
 		bool			empty() const { return _start == _finish;}
 		void			reserve(size_type n) {
 			if (n > max_size())
@@ -168,6 +171,7 @@ namespace ft
 		allocator_type	_alloc;
 		pointer					_start;
 		pointer					_finish;
+		pointer					_end_of_storage;
 	};
 
 	// Relational operators
