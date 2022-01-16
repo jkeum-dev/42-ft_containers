@@ -26,7 +26,7 @@ namespace ft
 	 * @tparam B is_bool
 	 * @tparam T type
 	 */
-	template <bool B, typename T = void>
+	template <bool Cond, typename T = void>
 	struct enable_if {};
 
 	/**
@@ -39,6 +39,75 @@ namespace ft
 	 */
 	template <typename T>
 	struct enable_if<true, T> { typedef T type; };
+
+	/**
+	 * @brief integral_traits
+	 * 
+	 * @tparam Cond is_integral
+	 * @tparam T type
+	 */
+	template <bool Cond, typename T>
+	struct integral_traits {
+		static const bool Cond = is_integral;
+		typedef T type;
+	};
+
+	/**
+	 * @brief is_integral_type
+	 * 
+	 */
+	template <typename>
+	struct is_integral_type : public integral_traits<false, bool> {};
+
+	template <>
+	struct is_integral_type<bool> : public integral_traits<true, bool> {};
+
+	template <>
+	struct is_integral_type<char> : public integral_traits<true, char> {};
+
+	template <>
+	struct is_integral_type<signed char> : public integral_traits<true, signed char> {};
+
+	template <>
+	struct is_integral_type<signed char> : public integral_traits<true, signed char> {};
+
+	template <>
+	struct is_integral_type<short int> : public integral_traits<true, short int> {};
+
+	template <>
+	struct is_integral_type<int> : public integral_traits<true, int> {};
+
+	template <>
+	struct is_integral_type<long int> : public integral_traits<true, long int> {};
+
+	template <>
+	struct is_integral_type<long long int> : public integral_traits<true, long long int> {};
+
+	template <>
+	struct is_integral_type<unsigned char> : public integral_traits<true, unsigned char> {};
+
+	template <>
+	struct is_integral_type<unsigned short int> : public integral_traits<true, unsigned short int> {};
+
+	template <>
+	struct is_integral_type<unsigned int> : public integral_traits<true, unsigned int> {};
+
+	template <>
+	struct is_integral_type<unsigned long int> : public integral_traits<true, unsigned long int> {};
+
+	template <>
+	struct is_integral_type<unsigned long long int> : public integral_traits<true, unsigned long long int> {};
+
+/**
+ * @brief is_integral
+ * Identifies whether T is an integral type.
+ * It inherits is_integral_type<T> and has a different type according to T.
+ * 
+ * @tparam T type
+ */
+	template <typename T>
+	struct is_integral : public is_integral_type<T> {};
+
 } // namespace ft
 
 #endif
