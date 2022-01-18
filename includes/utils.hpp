@@ -41,72 +41,44 @@ namespace ft
 	struct enable_if<true, T> { typedef T type; };
 
 	/**
-	 * @brief integral_traits
-	 * 
-	 * @tparam Cond is_integral
-	 * @tparam T type
-	 */
-	template <bool Cond, typename T>
-	struct integral_traits {
-		static const bool Cond = is_integral;
-		typedef T type;
-	};
-
-	/**
 	 * @brief is_integral_type
-	 * 
+	 * Declare a meta function to remove the const qualifier.
 	 */
 	template <typename>
-	struct is_integral_type : public integral_traits<false, bool> {};
+	struct is_integral_type : std::false_type {};
 
-	template <>
-	struct is_integral_type<bool> : public integral_traits<true, bool> {};
+	/**
+	 * @brief 
+	 * After define so that specialization can be easily made into a macro,
+	 * the integral type is specialized.
+	 */
+	#define IS_INTEGRAL_SPECIALIZATION(T) template<> struct is_integral_type<T> : std::true_type {}
 
-	template <>
-	struct is_integral_type<char> : public integral_traits<true, char> {};
-
-	template <>
-	struct is_integral_type<signed char> : public integral_traits<true, signed char> {};
-
-	template <>
-	struct is_integral_type<signed char> : public integral_traits<true, signed char> {};
-
-	template <>
-	struct is_integral_type<short int> : public integral_traits<true, short int> {};
-
-	template <>
-	struct is_integral_type<int> : public integral_traits<true, int> {};
-
-	template <>
-	struct is_integral_type<long int> : public integral_traits<true, long int> {};
-
-	template <>
-	struct is_integral_type<long long int> : public integral_traits<true, long long int> {};
-
-	template <>
-	struct is_integral_type<unsigned char> : public integral_traits<true, unsigned char> {};
-
-	template <>
-	struct is_integral_type<unsigned short int> : public integral_traits<true, unsigned short int> {};
-
-	template <>
-	struct is_integral_type<unsigned int> : public integral_traits<true, unsigned int> {};
-
-	template <>
-	struct is_integral_type<unsigned long int> : public integral_traits<true, unsigned long int> {};
-
-	template <>
-	struct is_integral_type<unsigned long long int> : public integral_traits<true, unsigned long long int> {};
+	IS_INTEGRAL_SPECIALIZATION(bool);
+	IS_INTEGRAL_SPECIALIZATION(char);
+	IS_INTEGRAL_SPECIALIZATION(signed char);
+	IS_INTEGRAL_SPECIALIZATION(short int);
+	IS_INTEGRAL_SPECIALIZATION(int);
+	IS_INTEGRAL_SPECIALIZATION(long int);
+	IS_INTEGRAL_SPECIALIZATION(long long int);
+	IS_INTEGRAL_SPECIALIZATION(unsigned char);
+	IS_INTEGRAL_SPECIALIZATION(unsigned short int);
+	IS_INTEGRAL_SPECIALIZATION(unsigned int);
+	IS_INTEGRAL_SPECIALIZATION(unsigned long int);
+	IS_INTEGRAL_SPECIALIZATION(unsigned long long int);
 
 /**
  * @brief is_integral
  * Identifies whether T is an integral type.
  * It inherits is_integral_type<T> and has a different type according to T.
+ * Whether the const qualifier is attached or not,
+ * it does not change whether it is an integral type or not,
+ * so remove it and pass it over.
  * 
  * @tparam T type
  */
 	template <typename T>
-	struct is_integral : public is_integral_type<T> {};
+	struct is_integral : public is_integral_type<typename std::remove_const<T>::type> {};
 
 } // namespace ft
 
