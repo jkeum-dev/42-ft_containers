@@ -41,18 +41,61 @@ namespace ft
 	struct enable_if<true, T> { typedef T type; };
 
 	/**
-	 * @brief is_integral_type
+	 * @brief true_type / false_type
+	 * It acts like an interface
+	 * so that the value is not displayed every time.
+	 */
+	struct true_type { enum _value { value = true }; };
+	struct false_type { enum _value { value = false }; };
+
+	/**
+	 * @brief remove_const
+	 * remove const from template type.
+	 * This is a specialization
+	 * so that only T can be imported from const T.
+	 * 
+	 * @tparam T type
+	 */
+	template <typename T>
+	struct remove_const { typedef T type };
+	template <typename T>
+	struct remove_const<T const> { typedef T type };
+
+	/**
+	 * @brief remove_volatile
+	 * remove volatile from template type.
+	 * This is a specialization
+	 * so that only T can be imported from volatile T.
+	 * 
+	 * @tparam T type
+	 */
+	template<typename T>
+	struct remove_volatile { typedef T type; };
+	template<typename T>
+	struct remove_volatile<T volatile> { typedef T type; };
+
+	/**
+	 * @brief remove_cv
+	 * remove const and volatile from template type.
+	 * 
+	 * @tparam T type
+	 */
+	template<typename T>
+	struct remove_cv { typedef typename remove_const<typename remove_volatile<T>::type>::type type; };
+
+	/**
+	 * @brief is_integral_helper
 	 * Declare a meta function to remove the const qualifier.
 	 */
-	template <typename>
-	struct is_integral_type : std::false_type {};
+	template <typename T>
+	struct is_integral_helper : false_type {};
 
 	/**
 	 * @brief 
 	 * After define so that specialization can be easily made into a macro,
 	 * the integral type is specialized.
 	 */
-	#define IS_INTEGRAL_SPECIALIZATION(T) template<> struct is_integral_type<T> : std::true_type {}
+	#define IS_INTEGRAL_SPECIALIZATION(T) template<> struct is_integral_helper<T> : true_type {}
 
 	IS_INTEGRAL_SPECIALIZATION(bool);
 	IS_INTEGRAL_SPECIALIZATION(char);
@@ -70,15 +113,15 @@ namespace ft
 /**
  * @brief is_integral
  * Identifies whether T is an integral type.
- * It inherits is_integral_type<T> and has a different type according to T.
- * Whether the const qualifier is attached or not,
+ * It inherits is_integral_helper<T> and has a different type according to T.
+ * Whether the const and volatile qualifier is attached or not,
  * it does not change whether it is an integral type or not,
  * so remove it and pass it over.
  * 
  * @tparam T type
  */
 	template <typename T>
-	struct is_integral : public is_integral_type<typename std::remove_const<T>::type> {};
+	struct is_integral : public is_integral_helper<typename remove_cv<T>::type> {};
 
 } // namespace ft
 
