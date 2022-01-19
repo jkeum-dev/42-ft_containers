@@ -10,8 +10,8 @@ namespace ft
 	/**
 	 * @brief vector class
 	 * 
-	 * @tparam T 
-	 * @tparam Alloc 
+	 * @tparam T value_type
+	 * @tparam Alloc allocator_type
 	 */
 	template < class T, class Alloc = std::allocator<T> >
 	class vector {
@@ -50,7 +50,8 @@ namespace ft
 		}	// Fill constructor
 		template <class InputIterator>
 		vector(InputIterator first, InputIterator last,
-					const allocator_type& alloc = allocator_type())
+					const allocator_type& alloc = allocator_type(),
+					typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = ft_nullptr)
 		: _alloc(alloc), _start(ft_nullptr), _finish(ft_nullptr), _end_of_storage(ft_nullptr) {
 			// difference_type n = 0;
 			// InputIterator tmp = first;
@@ -134,8 +135,9 @@ namespace ft
 		reference				back() { return *(_finish - 1); }
 		const_reference	back() const { return *(_finish - 1); }
 		// Modifiers:
-		template <class VectorIterator>
-		void assign(VectorIterator first, VectorIterator last) {
+		template <class InputIterator>
+		void assign(InputIterator first, InputIterator last,
+								typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = ft_nullptr) {
 			clear();
 			size_type n = last - first;
 			if (n <= capacity()) {
@@ -215,8 +217,9 @@ namespace ft
 				}
 			}
 		}	// fill
-		template <class VectorIterator>
-		void			insert(iterator position, VectorIterator first, VectorIterator last) {
+		template <class InputIterator>
+		void			insert(iterator position, InputIterator first, InputIterator last,
+										typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = ft_nullptr) {
 			size_type n = last - first;
 			if (size() + n <= capacity()) {
 				pointer val_tmp = _finish;
