@@ -23,8 +23,8 @@ namespace ft
 	 * If B is evaluated as true, the type of enable_if::value becomes T.
 	 * And if B is false, value does not exist in enable_if.
 	 * 
-	 * @tparam B is_bool
-	 * @tparam T type
+	 * @tparam B	is_bool
+	 * @tparam T	type
 	 */
 	template <bool Cond, typename T = void>
 	struct enable_if {};
@@ -35,7 +35,7 @@ namespace ft
 	 * When B is true, type is defined in the specialized version.
 	 * And in other cases, nothing is defined inside it.
 	 * 
-	 * @tparam T type
+	 * @tparam T	type
 	 */
 	template <typename T>
 	struct enable_if<true, T> { typedef T type; };
@@ -54,7 +54,7 @@ namespace ft
 	 * This is a specialization
 	 * so that only T can be imported from const T.
 	 * 
-	 * @tparam T type
+	 * @tparam T	type
 	 */
 	template <typename T>
 	struct remove_const { typedef T type };
@@ -67,7 +67,7 @@ namespace ft
 	 * This is a specialization
 	 * so that only T can be imported from volatile T.
 	 * 
-	 * @tparam T type
+	 * @tparam T	type
 	 */
 	template<typename T>
 	struct remove_volatile { typedef T type; };
@@ -78,7 +78,7 @@ namespace ft
 	 * @brief remove_cv
 	 * remove const and volatile from template type.
 	 * 
-	 * @tparam T type
+	 * @tparam T	type
 	 */
 	template<typename T>
 	struct remove_cv { typedef typename remove_const<typename remove_volatile<T>::type>::type type; };
@@ -118,11 +118,49 @@ namespace ft
  * it does not change whether it is an integral type or not,
  * so remove it and pass it over.
  * 
- * @tparam T type
+ * @tparam T	type
  */
 	template <typename T>
 	struct is_integral : public is_integral_helper<typename remove_cv<T>::type> {};
 
+	/**
+	 * @brief equal
+	 * Test whether the elements in two ranges are equal.
+	 * 
+	 * @tparam InputIterator1		first sequence
+	 * @tparam InputIterator2		second sequence
+	 * @tparam BinaryPredicate	binary function
+	 * @param first1	initial position of first sequence
+	 * @param last1		final position of first sequence
+	 * @param first2	initial position of second sequence
+	 * @param pred		Accepts two elements as argument
+	 * 								(one of each of the two sequences, in the same order),
+	 * 								and returns a value convertible to bool.
+	 * @return true		All of the elements in both ranges match.
+	 * @return false	Not true.
+	 */
+	template <class InputIterator1, class InputIterator2>
+	bool equal(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2)
+	{
+		while (first1 != last1) {
+			if (!(*first1 == *first2))
+				return false;
+			++first1;
+			++first2;
+		}
+		return true;
+	}
+
+	template <class InputIterator1, class InputIterator2, class BinaryPredicate>
+	bool equal (InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, BinaryPredicate pred) {
+		while (first1 != last1) {
+			if (!pred(*first1, *first2))
+				return false;
+			++first1;
+			++first2;
+		}
+		return true;
+	}
 } // namespace ft
 
 #endif
