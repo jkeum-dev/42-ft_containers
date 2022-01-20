@@ -57,9 +57,9 @@ namespace ft
 	 * @tparam T	type
 	 */
 	template <typename T>
-	struct remove_const { typedef T type };
+	struct remove_const { typedef T type; };
 	template <typename T>
-	struct remove_const<T const> { typedef T type };
+	struct remove_const<T const> { typedef T type; };
 
 	/**
 	 * @brief remove_volatile
@@ -206,6 +206,14 @@ namespace ft
 		}
 		return (first2 != last2);
 	}	// custom
+
+	template <typename InputIterator>
+	typename iterator_traits<InputIterator>::difference_type distance(InputIterator first, InputIterator last) {
+		typename iterator_traits<InputIterator>::difference_type n = 0;
+		while (first++ != last)
+			n++;
+		return n;
+	}
 } // namespace ft
 
 #endif
