@@ -4,6 +4,7 @@
 #include <memory>
 #include <stdexcept>
 #include "VectorIterator.hpp"
+#include <iostream>
 
 namespace ft
 {
@@ -62,22 +63,23 @@ namespace ft
 		}	// Range constructor
 		vector(const vector& x)
 		: _alloc(x._alloc), _start(ft_nullptr), _finish(ft_nullptr), _end_of_storage(ft_nullptr) {
-			difference_type n = ft::distance(x._start, x._finish);
+			difference_type n = x._finish - x._start;
 			_start = _alloc.allocate(n);
 			_finish = _start;
-			_end_of_storage = _start + n;
+			// _end_of_storage = _start + n;
 			pointer tmp = x._start;
 			while (n--)
 				_alloc.construct(_finish++, *tmp++);
+			_end_of_storage = _finish;
 		}	// Copy constructor
 		~vector() {
 			clear();
-			_alloc.deallocate(_start, _finish - _start);
+			_alloc.deallocate(_start, _end_of_storage - _start);
 		}	// Destructor
 		vector& operator=(const vector& x) {
 			if (this != &x) {
-				this->clear();
-				this->assign(x.begin(), x.end());
+				clear();
+				assign(x.begin(), x.end());
 			}
 			return *this;
 		}	// Assignment operator
@@ -105,11 +107,20 @@ namespace ft
 			if (n > max_size())
 				throw std::length_error("Vector reserve error");
 			else if (n > capacity()) {
-				assign(_start, _finish);
-				size_type i = ft::distance(_start, _finish);
-				insert(_finish, n - i, value_type());
+				pointer start = _start;
+				pointer finish = _finish;
+				pointer end_of_storage = _end_of_storage;
+
+				_start = _alloc.allocate(n);
+				_finish = _start;
+				_end_of_storage = _start + n;
+				pointer tmp = start;
+				while (tmp != finish) {
+					_alloc.construct(_finish++, *tmp);
+					_alloc.destroy(tmp++);
+				}
+				_alloc.deallocate(start, end_of_storage - start);
 			}
-			// ~vector();
 		}
 		// Element access:
 		reference 			operator[](size_type n) { return *(_start + n); }
@@ -144,8 +155,9 @@ namespace ft
 				_start = _alloc.allocate(n);
 				_finish = _start;
 				_end_of_storage = _start + n;
-				while (n--)
-					_alloc.construct(_finish++, *first++);
+				const_pointer tmp = &(*first);
+				while (tmp != &(*last))
+					_alloc.construct(_finish++, *tmp++);
 				_alloc.deallocate(start, end_of_storage - start);
 			}
 		}	// range
@@ -169,21 +181,22 @@ namespace ft
 		void push_back(const value_type& val) {
 			if (_finish == _end_of_storage) {
 				if (size() == 0)
-					resize(1);
+					reserve(1);
 				else
-					resize(capacity() * 2);
+					reserve(capacity() * 2);
 			}
 			_alloc.construct(_finish++, val);
 		}
 		void pop_back() { _alloc.destroy(--_finish); }
 		iterator	insert(iterator position, const value_type& val) {
+			size_type n = &(*position) - _start;
 			insert(position, 1, val);
-			return position;
+			return _start + n;
 		}	// single element
 		void			insert(iterator position, size_type n, const value_type& val) {
 			if (size() + n <= capacity()) {
 				pointer val_tmp = _finish;
-				size_type range = ft::distance(position, _finish);
+				size_type range = _finish - &(*position);
 				_finish += n;
 				pointer tmp = _finish;
 				while (range--)
@@ -193,12 +206,12 @@ namespace ft
 			}
 			else {
 				pointer tmp = _start;
-				size_type size = n + size();
-				size_type front_part = ft::distance(_start, position);
-				size_type back_part = ft::distance(position, _finish) - n;
-				_start = _alloc.allocate(size);
+				size_type _size = n + size();
+				size_type front_part = &(*position) - _start;
+				size_type back_part = _finish - &(*position);
+				_start = _alloc.allocate(_size);
 				_finish = _start;
-				_end_of_storage = _start + size;
+				_end_of_storage = _start + _size;
 				while (front_part--) {
 					_alloc.construct(_finish++, *tmp);
 					_alloc.destroy(tmp++);
@@ -217,25 +230,22 @@ namespace ft
 			size_type n = ft::distance(first, last);
 			if (size() + n <= capacity()) {
 				pointer val_tmp = _finish;
-				// size_type range = ft::distance(position, _finish);
 				size_type range = _finish - &(*position);
 				_finish += n;
 				pointer tmp = _finish;
 				while (range--)
 					_alloc.construct(--tmp, *(--val_tmp));
 				while (n--)
-					_alloc.construct(--tmp, *first++);
+					_alloc.construct(--tmp, *(--last));
 			}
 			else {
 				pointer tmp = _start;
-				size_type size = n + this->size();
-				// size_type front_part = ft::distance(_start, position);
+				size_type _size = n + size();
 				size_type front_part = &(*position) - _start;
-				// size_type back_part = ft::distance(position, _finish) - n;
-				size_type back_part = _finish - &(*position) - n;
-				_start = _alloc.allocate(size);
+				size_type back_part = _finish - &(*position);
+				_start = _alloc.allocate(_size);
 				_finish = _start;
-				_end_of_storage = _start + size;
+				_end_of_storage = _start + _size;
 				while (front_part--) {
 					_alloc.construct(_finish++, *tmp);
 					_alloc.destroy(tmp++);
@@ -249,9 +259,9 @@ namespace ft
 			}
 		}	// range
 		iterator erase(iterator position) {
-			_alloc.destroy(position);
-			size_type n = ft::distance(position, _finish) - 1;
-			pointer tmp = position;
+			_alloc.destroy(&(*position));
+			size_type n = _finish - &(*position) - 1;
+			pointer tmp = &(*position);
 			while (n--) {
 				_alloc.construct(tmp, *(tmp + 1));
 				_alloc.destroy(tmp++);
@@ -260,12 +270,12 @@ namespace ft
 			return position;
 		}
 		iterator erase(iterator first, iterator last) {
-			pointer tmp = first;
-			while (tmp != last)
+			pointer tmp = &(*first);
+			while (tmp != &(*last))
 				_alloc.destroy(tmp++);
-			size_type n = ft::distance(last, _finish);
+			size_type n = _finish - &(*last);
 			size_type range = ft::distance(first, last);
-			tmp = first;
+			tmp = &(*first);
 			while (n--) {
 				_alloc.construct(tmp, *last++);
 				_alloc.destroy(tmp++);
@@ -289,7 +299,7 @@ namespace ft
 			_finish = tmp_finish;
 			_end_of_storage = tmp_end_of_storage;
 		}
-		void clear() { while (_start < _finish) _alloc.destroy(_start++); }
+		void clear() { while (_start != _finish) _alloc.destroy(--_finish); }
 		// Allocator:
 		allocator_type get_allocator() const { return _alloc; }
 
@@ -308,9 +318,9 @@ namespace ft
 	bool operator==(const vector<T, Alloc>& lhs, const vector<T, Alloc>& rhs) {
 		if (lhs.size() != rhs.size())
 			return false;
-		typename ft::vector<T, Alloc>::iterator lhs_it = lhs.begin();
-		typename ft::vector<T, Alloc>::iterator rhs_it = rhs.begin();
-		while (lhs_it < lhs.end()) {
+		typename ft::vector<T, Alloc>::const_iterator lhs_it = lhs.begin();
+		typename ft::vector<T, Alloc>::const_iterator rhs_it = rhs.begin();
+		while (lhs_it != lhs.end()) {
 			if (rhs_it == rhs.end() || *lhs_it++ != *rhs_it++)
 				return false;
 		}

@@ -21,6 +21,9 @@ namespace ft
 		VectorIterator& operator=(const VectorIterator& copy) { if (this != &copy) this->_current = copy._current; return *this; }	// Assignment operator
 		virtual ~VectorIterator() {}	// Destructor
 		pointer const & base() const { return _current; }	// getter
+
+		operator VectorIterator<const T>() const { return VectorIterator<const T>(_current); }
+
 		/**
 		 * @brief operators
 		 */
