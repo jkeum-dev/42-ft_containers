@@ -6,6 +6,15 @@
 
 namespace ft
 {
+	/**
+	 * @brief VectorIterator
+	 * Implemented for use as a random access iterator.
+	 * Random access iterators are iterators that can be used to access elements
+	 * at an arbitrary offset position relative to the element they point to,
+	 * offering the same functionality as pointers.
+	 * 
+	 * @tparam T	Type of elements pointed by the iterator.
+	 */
 	template <typename T>
 	class VectorIterator : public ft::iterator<ft::random_access_iterator_tag, T>
 	{
@@ -16,23 +25,12 @@ namespace ft
 		typedef typename ft::iterator<ft::random_access_iterator_tag, T>::pointer						pointer;
 		typedef typename ft::iterator<ft::random_access_iterator_tag, T>::reference					reference;
 
-		// Default constructor
-		VectorIterator(pointer ptr = ft_nullptr) : _current(ptr) {}
-
-		// Copy constructor
-		VectorIterator(const VectorIterator& copy) : _current(copy._current) {}
-
-		// Assignment operator
-		VectorIterator& operator=(const VectorIterator& copy) { if (this != &copy) this->_current = copy._current; return *this; }
-
-		// Destructor
-		virtual ~VectorIterator() {}
-
-		// Getter
-		pointer const & base() const { return _current; }
-
-		// Overloading type casts
-		operator VectorIterator<const T>() const { return VectorIterator<const T>(_current); }
+		VectorIterator(pointer ptr = ft_nullptr) : _current(ptr) {}	// Default constructor
+		VectorIterator(const VectorIterator& copy) : _current(copy._current) {}	// Copy constructor
+		VectorIterator& operator=(const VectorIterator& copy) { if (this != &copy) this->_current = copy._current; return *this; }	// Assignment operator
+		virtual ~VectorIterator() {}	// Destructor
+		pointer const & base() const { return _current; }	// Getter
+		operator VectorIterator<const T>() const { return VectorIterator<const T>(_current); }	// Overloading type casts
 
 		/**
 		 * @brief Operators

@@ -3,13 +3,14 @@
 
 #include <cstddef>
 
-namespace ft {
-	/** 
-	 *  @defgroup iterator_tags Iterator Tags
-	 *  These are empty types, used to distinguish different iterators.  The
-	 *  distinction is not made by what they contain, but simply by what they
-	 *  are.  Different underlying algorithms can then be used based on the
-	 *  different operations supported by different iterator types.
+namespace ft
+{
+	/**
+	 * @defgroup iterator_tags
+	 * These are empty types, used to distinguish different iterators.
+	 * The distinction is not made by what they contain, but simply by what they are.
+	 * Different underlying algorithms can then be used based on the
+	 * different operations supported by different iterator types.
 	**/
 	struct input_iterator_tag {};		// Marking input iterators.
 	struct output_iterator_tag {};	// Marking output iterators.
@@ -19,16 +20,19 @@ namespace ft {
 
 	/**
 	 * @brief iterator traits
+	 * Traits class defining properties of iterators.
 	 */
-	template <class T>
+	// Generic Definition
+	template <class Iterator>
 	struct iterator_traits {
-		typedef typename T::value_type				value_type;
-		typedef typename T::difference_type		difference_type;
-		typedef typename T::iterator_category	iterator_category;
-		typedef typename T::pointer						pointer;
-		typedef typename T::reference					reference;
+		typedef typename Iterator::value_type					value_type;
+		typedef typename Iterator::difference_type		difference_type;
+		typedef typename Iterator::iterator_category	iterator_category;
+		typedef typename Iterator::pointer						pointer;
+		typedef typename Iterator::reference					reference;
 	};
 
+	// T* specialization
 	template <class T>
 	struct iterator_traits<T*> {
 		typedef T														value_type;
@@ -38,6 +42,7 @@ namespace ft {
 		typedef T&													reference;
 	};
 
+	// const T* specialization
 	template <class T>
 	struct iterator_traits<const T*> {
 		typedef T														value_type;
@@ -49,6 +54,14 @@ namespace ft {
 
 	/**
 	 * @brief iterator
+	 * This is a base class template that can be used to derive iterator classes from it.
+	 * It is not an iterator class and does not provide any of the functionality an iterator is expected to have.
+	 * 
+	 * @tparam Category		Category to which the iterator belongs to.
+	 * @tparam T					Type of elements pointed by the iterator.
+	 * @tparam Distance		Type to represent the difference between two iterators.
+	 * @tparam Pointer		Type to represent a pointer to an element pointed by the iterator.
+	 * @tparam Reference	Type to represent a reference to an element pointed by the iterator.
 	 */
 	template<class Category, class T, class Distance = ptrdiff_t,
 					class Pointer = T*, class Reference = T&>
@@ -63,7 +76,10 @@ namespace ft {
 
 	/**
 	 * @brief reverse iterator
-	 * https://www.cplusplus.com/reference/iterator/reverse_iterator/
+	 * This class reverses the direction in which a bidirectional or random-access iterator iterates through a range.
+	 * 
+	 * @tparam Iterator		A bidirectional iterator type. Or a random-access iterator,
+	 * 										if an operator that requires such a category of iterators is used.
 	 */
 	template <typename Iterator>
 	class reverse_iterator
@@ -104,49 +120,52 @@ namespace ft {
 	 * @brief Non-member function overloads
 	**/
 	template <typename Iterator>
-	bool operator==(const ft::reverse_iterator<Iterator>& lIter, const ft::reverse_iterator<Iterator>& rIter) { return lIter.base() == rIter.base(); }
+	bool operator==(const reverse_iterator<Iterator>& lIter, const reverse_iterator<Iterator>& rIter) { return lIter.base() == rIter.base(); }
 	
 	template <typename Iterator, typename Iterator_c>	// compare with const_iterator
-	bool operator==(const ft::reverse_iterator<Iterator>& lIter, const ft::reverse_iterator<Iterator_c>& rIter) { return lIter.base() == rIter.base(); }
+	bool operator==(const reverse_iterator<Iterator>& lIter, const reverse_iterator<Iterator_c>& rIter) { return lIter.base() == rIter.base(); }
 	
 	template <typename Iterator>
-	bool operator!=(const ft::reverse_iterator<Iterator>& lIter, const ft::reverse_iterator<Iterator>& rIter) { return lIter.base() != rIter.base(); }
+	bool operator!=(const reverse_iterator<Iterator>& lIter, const reverse_iterator<Iterator>& rIter) { return lIter.base() != rIter.base(); }
 	
 	template <typename Iterator, typename Iterator_c>	// compare with const_iterator
-	bool operator!=(const ft::reverse_iterator<Iterator>& lIter, const ft::reverse_iterator<Iterator_c>& rIter) { return lIter.base() != rIter.base(); }
+	bool operator!=(const reverse_iterator<Iterator>& lIter, const reverse_iterator<Iterator_c>& rIter) { return lIter.base() != rIter.base(); }
 	
 	template <typename Iterator>
-	bool operator<(const ft::reverse_iterator<Iterator>& lIter, const ft::reverse_iterator<Iterator>& rIter) { return lIter.base() > rIter.base(); }
+	bool operator<(const reverse_iterator<Iterator>& lIter, const reverse_iterator<Iterator>& rIter) { return lIter.base() > rIter.base(); }
 	
 	template <typename Iterator, typename Iterator_c>	// compare with const_iterator
-	bool operator<(const ft::reverse_iterator<Iterator>& lIter, const ft::reverse_iterator<Iterator_c>& rIter) { return lIter.base() > rIter.base(); }
+	bool operator<(const reverse_iterator<Iterator>& lIter, const reverse_iterator<Iterator_c>& rIter) { return lIter.base() > rIter.base(); }
 	
 	template <typename Iterator>
-	bool operator>(const ft::reverse_iterator<Iterator>& lIter, const ft::reverse_iterator<Iterator>& rIter) { return lIter.base() < rIter.base(); }
+	bool operator>(const reverse_iterator<Iterator>& lIter, const reverse_iterator<Iterator>& rIter) { return lIter.base() < rIter.base(); }
 	
 	template <typename Iterator, typename Iterator_c>	// compare with const_iterator
-	bool operator>(const ft::reverse_iterator<Iterator>& lIter, const ft::reverse_iterator<Iterator_c>& rIter) { return lIter.base() < rIter.base(); }
+	bool operator>(const reverse_iterator<Iterator>& lIter, const reverse_iterator<Iterator_c>& rIter) { return lIter.base() < rIter.base(); }
 	
 	template <typename Iterator>
-	bool operator<=(const ft::reverse_iterator<Iterator>& lIter, const ft::reverse_iterator<Iterator>& rIter) { return lIter.base() >= rIter.base(); }
+	bool operator<=(const reverse_iterator<Iterator>& lIter, const reverse_iterator<Iterator>& rIter) { return lIter.base() >= rIter.base(); }
 	
 	template <typename Iterator, typename Iterator_c>	// compare with const_iterator
-	bool operator<=(const ft::reverse_iterator<Iterator>& lIter, const ft::reverse_iterator<Iterator_c>& rIter) { return lIter.base() >= rIter.base(); }
+	bool operator<=(const reverse_iterator<Iterator>& lIter, const reverse_iterator<Iterator_c>& rIter) { return lIter.base() >= rIter.base(); }
 	
 	template <typename Iterator>
-	bool operator>=(const ft::reverse_iterator<Iterator>& lIter, const ft::reverse_iterator<Iterator>& rIter) { return lIter.base() <= rIter.base(); }
+	bool operator>=(const reverse_iterator<Iterator>& lIter, const reverse_iterator<Iterator>& rIter) { return lIter.base() <= rIter.base(); }
 	
 	template <typename Iterator, typename Iterator_c>	// compare with const_iterator
-	bool operator>=(const ft::reverse_iterator<Iterator>& lIter, const ft::reverse_iterator<Iterator_c>& rIter) { return lIter.base() <= rIter.base(); }
+	bool operator>=(const reverse_iterator<Iterator>& lIter, const reverse_iterator<Iterator_c>& rIter) { return lIter.base() <= rIter.base(); }
 
-	template <typename Iterator>	// n + iter
-	ft::reverse_iterator<Iterator> operator+(typename ft::reverse_iterator<Iterator>::difference_type n, const ft::reverse_iterator<Iterator> &iter) { return iter + n; }
+	// n + iter
+	template <typename Iterator>
+	reverse_iterator<Iterator> operator+(typename reverse_iterator<Iterator>::difference_type n, const reverse_iterator<Iterator> &iter) { return iter + n; }
 
-	template <typename Iterator>	// iterator - iterator
-	typename ft::reverse_iterator<Iterator>::difference_type operator-(const ft::reverse_iterator<Iterator>& lIter, const ft::reverse_iterator<Iterator>& rIter) { return rIter.base() - lIter.base(); }
+	// iterator - iterator
+	template <typename Iterator>
+	typename reverse_iterator<Iterator>::difference_type operator-(const reverse_iterator<Iterator>& lIter, const reverse_iterator<Iterator>& rIter) { return rIter.base() - lIter.base(); }
 
-	template <typename Iterator, typename Iterator_c>	// iterator - const_iterator
-	typename ft::reverse_iterator<Iterator>::difference_type operator-(const ft::reverse_iterator<Iterator>& lIter, const ft::reverse_iterator<Iterator_c>& rIter) { return rIter.base() - lIter.base(); }
+	// iterator - const_iterator
+	template <typename Iterator, typename Iterator_c>
+	typename reverse_iterator<Iterator>::difference_type operator-(const reverse_iterator<Iterator>& lIter, const reverse_iterator<Iterator_c>& rIter) { return rIter.base() - lIter.base(); }
 
 }	// namespace ft
 
