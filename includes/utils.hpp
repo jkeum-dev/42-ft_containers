@@ -3,18 +3,23 @@
 
 namespace ft
 {
+	/**
+	 * @brief nullptr_t
+	 * Type of the null pointer constant nullptr.
+	 * This is a const global object.
+	 */
 	const class nullptr_t{
 	public:
-		// convertible to any type of null non-member pointer...
+		// Convertible to any type of null non-member pointer,
 		template<class T>
 		operator T*() const { return 0; }
 
-		// or any type of null member pointer...
+		// or any type of null member pointer.
 		template<class C, class T>	// any type T for any class type C
 		operator T C::*() const { return 0; }
 
 	private:
-		void operator&() const;	// Can't take address of nullptr
+		void operator&() const;	// Can't take address of nullptr.
 	} ft_nullptr = {};
 
 	/**
@@ -31,7 +36,6 @@ namespace ft
 
 	/**
 	 * @brief enable_if
-	 * 
 	 * When B is true, type is defined in the specialized version.
 	 * And in other cases, nothing is defined inside it.
 	 * 
@@ -42,17 +46,15 @@ namespace ft
 
 	/**
 	 * @brief true_type / false_type
-	 * It acts like an interface
-	 * so that the value is not displayed every time.
+	 * It acts like an interface so that the value is not displayed every time.
 	 */
 	struct true_type { enum _value { value = true }; };
 	struct false_type { enum _value { value = false }; };
 
 	/**
 	 * @brief remove_const
-	 * remove const from template type.
-	 * This is a specialization
-	 * so that only T can be imported from const T.
+	 * Remove const from template type.
+	 * This is a specialization so that only T can be imported from const T.
 	 * 
 	 * @tparam T	type
 	 */
@@ -63,9 +65,8 @@ namespace ft
 
 	/**
 	 * @brief remove_volatile
-	 * remove volatile from template type.
-	 * This is a specialization
-	 * so that only T can be imported from volatile T.
+	 * Remove volatile from template type.
+	 * This is a specialization so that only T can be imported from volatile T.
 	 * 
 	 * @tparam T	type
 	 */
@@ -76,7 +77,7 @@ namespace ft
 
 	/**
 	 * @brief remove_cv
-	 * remove const and volatile from template type.
+	 * Remove const and volatile from template type.
 	 * 
 	 * @tparam T	type
 	 */
@@ -115,8 +116,7 @@ namespace ft
  * Identifies whether T is an integral type.
  * It inherits is_integral_helper<T> and has a different type according to T.
  * Whether the const and volatile qualifier is attached or not,
- * it does not change whether it is an integral type or not,
- * so remove it and pass it over.
+ * it does not change whether it is an integral type or not, so remove it and pass it over.
  * 
  * @tparam T	type
  */
@@ -175,7 +175,7 @@ namespace ft
 	 * @param last2		final position of second sequence
 	 * @param comp		Accepts two arguments of the types pointed by the iterators,
 	 * 								and returns a value convertible to bool.
-	 * @return true		if the first range compares lexicographically less than the second.
+	 * @return true		If the first range compares lexicographically less than the second.
 	 * @return false	Not true(including when all the elements of both ranges are equivalent).
 	 */
 	template <class InputIterator1, class InputIterator2>
@@ -207,6 +207,15 @@ namespace ft
 		return (first2 != last2);
 	}	// custom
 
+	/**
+	 * @brief distance
+	 * User-defined function for finding the distance between two iterators.
+	 * 
+	 * @tparam InputIterator		iterator type
+	 * @param first		initial position of the iterator
+	 * @param last		final position of the iterator
+	 * @return iterator_traits<InputIterator>::difference_type	distance between two iterators
+	 */
 	template <typename InputIterator>
 	typename iterator_traits<InputIterator>::difference_type distance(InputIterator first, InputIterator last) {
 		typename iterator_traits<InputIterator>::difference_type n = 0;
