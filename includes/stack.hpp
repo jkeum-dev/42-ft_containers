@@ -32,10 +32,35 @@ namespace ft
 		void push (const value_type& val) { _c.push_back(val); }
 		void pop() { _c.pop_back(); }
 
+		// friend function for direct access to member variables of a class
+		template <class _T, class _Container>
+		friend bool operator==(const stack<_T, _Container>& lhs, const stack<_T, _Container>& rhs);
+
+		template <class _T, class _Container>
+		friend bool operator<(const stack<_T, _Container>& lhs, const stack<_T, _Container>& rhs);
+
 	protected :
 		container_type _c;
 	};
 
+	// Relational operators
+	template <class T, class Container>
+	inline bool operator==(const stack<T, Container>& lhs, const stack<T, Container>& rhs) { return lhs._c == rhs._c; }
+
+	template <class T, class Container>
+	inline bool operator!=(const stack<T, Container>& lhs, const stack<T, Container>& rhs) { return !(lhs == rhs); }
+
+	template <class T, class Container>
+	inline bool operator<(const stack<T, Container>& lhs, const stack<T, Container>& rhs) { return lhs._c < rhs._c; }
+
+	template <class T, class Container>
+	inline bool operator<=(const stack<T, Container>& lhs, const stack<T, Container>& rhs) { return !(rhs < lhs); }
+
+	template <class T, class Container>
+	inline bool operator>(const stack<T, Container>& lhs, const stack<T, Container>& rhs) { return rhs < lhs; }
+
+	template <class T, class Container>
+	inline bool operator>=(const stack<T, Container>& lhs, const stack<T, Container>& rhs) { return !(lhs < rhs); }
 } // namespace ft
 
 #endif
