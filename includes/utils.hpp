@@ -209,7 +209,7 @@ namespace ft
 
 	/**
 	 * @brief binary_function
-	 * Binary function object base class
+	 * Binary function object base class.
 	 * 
 	 * @tparam Arg1		Type of the first argument in member operator()
 	 * @tparam Arg2		Type of the second argument in member operator()
@@ -224,7 +224,7 @@ namespace ft
 
 	/**
 	 * @brief less
-	 * Function object class for less-than inequality comparison
+	 * Function object class for less-than inequality comparison.
 	 * 
 	 * @tparam T	Type of the arguments to compare by the functional call.
 	 */
@@ -236,8 +236,8 @@ namespace ft
 	/**
 	 * @brief pair
 	 * 
-	 * @tparam T1	Type of member first, aliased as first_type.
-	 * @tparam T2	Type of member second, aliased as second_type.
+	 * @tparam T1	Type of member first
+	 * @tparam T2	Type of member second
 	 */
 	template <class T1, class T2>
 	struct pair {
@@ -262,12 +262,12 @@ namespace ft
 
 		// Copy constructor
 		template <class U, class V>
-		pair (const pair<U, V>& pr) : first(pr.first), second(pr.second) {}
+		pair(const pair<U, V>& pr) : first(pr.first), second(pr.second) {}
 
 		// Initialization constructor
-		pair (const first_type& a, const second_type& b) : first(a), second(b) {}
+		pair(const first_type& a, const second_type& b) : first(a), second(b) {}
 
-		pair& operator= (const pair& pr) {
+		pair& operator=(const pair& pr) {
 			if (*this == pr)
 				return *this;
 			first = pr.first;
@@ -298,6 +298,19 @@ namespace ft
 
 	template <class T1, class T2>
 	inline bool operator>=(const pair<T1,T2>& lhs, const pair<T1,T2>& rhs) { return !(lhs < rhs); }
+
+	/**
+	 * @brief make_pair
+	 * Construct pair object.
+	 * 
+	 * @tparam T1		Type of member first of pair
+	 * @tparam T2		Type of member second of pair
+	 * @param x			Values for the members first
+	 * @param y			Values for the members second
+	 * @return pair<T1, T2>		A pair object whose elements first and second are set to x and y respectivelly.
+	 */
+	template <class T1, class T2>
+	pair<T1, T2> make_pair(T1 x, T2 y) { return pair<T1, T2>(x, y); }
 
 	/**
 	 * @brief distance
