@@ -234,6 +234,72 @@ namespace ft
 	};
 
 	/**
+	 * @brief pair
+	 * 
+	 * @tparam T1	Type of member first, aliased as first_type.
+	 * @tparam T2	Type of member second, aliased as second_type.
+	 */
+	template <class T1, class T2>
+	struct pair {
+	public :
+		/**
+		 * @brief Member types
+		 */
+		typedef T1 first_type;
+		typedef T2 second_type;
+
+		/**
+		 * @brief Member variables
+		 */
+		first_type	first;
+		second_type	second;
+
+		/**
+		 * @brief Member functions
+		 */
+		// Default constructor
+		pair() : first(), second() {}
+
+		// Copy constructor
+		template <class U, class V>
+		pair (const pair<U, V>& pr) : first(pr.first), second(pr.second) {}
+
+		// Initialization constructor
+		pair (const first_type& a, const second_type& b) : first(a), second(b) {}
+
+		pair& operator= (const pair& pr) {
+			if (*this == pr)
+				return *this;
+			first = pr.first;
+			second = pr.second;
+			return *this;
+		}
+	};
+
+	// Relational operators
+	template <class T1, class T2>
+	inline bool operator==(const pair<T1, T2>& lhs, const pair<T1, T2>& rhs) {
+		return lhs.first == rhs.first && lhs.second == rhs.second;
+	}
+
+	template <class T1, class T2>
+	inline bool operator!=(const pair<T1, T2>& lhs, const pair<T1, T2>& rhs) { return !(lhs == rhs); }
+
+	template <class T1, class T2>
+	inline bool operator<(const pair<T1, T2>& lhs, const pair<T1, T2>& rhs) {
+		return lhs.first < rhs.first || (!(rhs.first < lhs.first) && lhs.second < rhs.second);
+	}
+
+	template <class T1, class T2>
+	inline bool operator<=(const pair<T1,T2>& lhs, const pair<T1,T2>& rhs) { return !(rhs < lhs); }
+
+	template <class T1, class T2>
+	inline bool operator>(const pair<T1,T2>& lhs, const pair<T1,T2>& rhs) { return rhs < lhs; }
+
+	template <class T1, class T2>
+	inline bool operator>=(const pair<T1,T2>& lhs, const pair<T1,T2>& rhs) { return !(lhs < rhs); }
+
+	/**
 	 * @brief distance
 	 * User-defined function for finding the distance between two iterators.
 	 * 
