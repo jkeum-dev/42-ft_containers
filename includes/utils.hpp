@@ -70,9 +70,9 @@ namespace ft
 	 * 
 	 * @tparam T	type
 	 */
-	template<typename T>
+	template <typename T>
 	struct remove_volatile { typedef T type; };
-	template<typename T>
+	template <typename T>
 	struct remove_volatile<T volatile> { typedef T type; };
 
 	/**
@@ -81,7 +81,7 @@ namespace ft
 	 * 
 	 * @tparam T	type
 	 */
-	template<typename T>
+	template <typename T>
 	struct remove_cv { typedef typename remove_const<typename remove_volatile<T>::type>::type type; };
 
 	/**
@@ -206,6 +206,32 @@ namespace ft
 		}
 		return (first2 != last2);
 	}	// custom
+
+	/**
+	 * @brief binary_function
+	 * Binary function object base class
+	 * 
+	 * @tparam Arg1		Type of the first argument in member operator()
+	 * @tparam Arg2		Type of the second argument in member operator()
+	 * @tparam Result	Type returned by member operator()
+	 */
+	template <class Arg1, class Arg2, class Result>
+	struct binary_function {
+		typedef Arg1 first_argument_type;
+		typedef Arg2 second_argument_type;
+		typedef Result result_type;
+	};
+
+	/**
+	 * @brief less
+	 * Function object class for less-than inequality comparison
+	 * 
+	 * @tparam T	Type of the arguments to compare by the functional call.
+	 */
+	template <class T>
+	struct less : binary_function<T, T, bool> {
+		bool operator()(const T& x, const T& y) const { return x < y; }
+	};
 
 	/**
 	 * @brief distance
