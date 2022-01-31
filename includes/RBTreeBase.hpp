@@ -1,5 +1,5 @@
-#ifndef RBTREEBASE_HPP
-#define RBTREEBASE_HPP
+#ifndef RBTREENODE_HPP
+#define RBTREENODE_HPP
 
 namespace ft
 {
@@ -10,6 +10,7 @@ namespace ft
 	public :
 		typedef T value_type;
 		typedef RBTreeNode* node;
+		T* value;
 		node left_child;
 		node right_child;
 		node parent;
