@@ -90,15 +90,24 @@ namespace ft
 		}
 		MapIterator operator--(int) { MapIterator tmp = *this; --_node; return tmp; }
 
-	private :
+	protected :
 		node_type* _node;
 	};
 
+	/**
+	 * @brief Relational operators
+	 */
 	template <typename T>
 	bool operator==(const MapIterator<T>& lIter, const MapIterator<T>& rIter) { return lIter.base()->value == rIter.base()->value; }
 
+	template <typename T, typename T_c>	// compare with const_iterator
+	bool operator==(const MapIterator<T>& lIter, const MapIterator<T_c>& rIter) { return lIter.base()->value == rIter.base()->value; }
+
 	template <typename T>
 	bool operator!=(const MapIterator<T>& lIter, const MapIterator<T>& rIter) { return lIter.base()->value != rIter.base()->value; }
+
+	template <typename T, typename T_c>	// compare with const_iterator
+	bool operator!=(const MapIterator<T>& lIter, const MapIterator<T_c>& rIter) { return lIter.base()->value != rIter.base()->value; }
 } // namespace ft
 
 
