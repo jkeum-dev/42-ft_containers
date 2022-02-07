@@ -53,6 +53,7 @@ namespace ft
 		typedef ft::reverse_iterator<const_iterator>			const_reverse_iterator;
 		typedef typename allocator_type::difference_type	difference_type;
 		typedef typename allocator_type::size_type				size_type;
+		typedef typename ft::RBTreeNode<value_type>				rb_tree;
 
 		/**
 		 * @brief Member functions
@@ -91,7 +92,14 @@ namespace ft
 		size_type max_size() const;
 		// Element access:
 		mapped_type& operator[] (const key_type& k);
-		
+
+
+		/**
+		 * @brief Member variables
+		 */
+	private:
+		allocator_type	_alloc;
+		rb_tree					_tree;
 	};
 } // namespace ft
 
