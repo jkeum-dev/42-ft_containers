@@ -34,10 +34,10 @@ namespace ft
 		MapIterator& operator++() {
 			node_type* tmp = ft_nullptr;
 			// if right_child exists,
-			if (_node->right_child->value != ft_nullptr) {
+			if (_node->right_child != ft_nullptr) {
 				tmp = _node->right_child;
 				// search the leftmost of the right_child.
-				while (tmp->left_child->value != ft_nullptr)
+				while (tmp->left_child != ft_nullptr)
 					tmp = tnp->left_child;
 			}
 			else {	// if right_child doesn't exist,
@@ -62,12 +62,12 @@ namespace ft
 
 		MapIterator& operator--() {
 			node_type* tmp = ft_nullptr;
-			if (_node->value == ft_nullptr)
+			if (_node == ft_nullptr)
 				tmp = _node->parent;
-			else if (_node->left_child->value != ft_nullptr) {	// if left_child exists,
+			else if (_node->left_child != ft_nullptr) {	// if left_child exists,
 				tmp = _node->left_child;
 				// search the rightmost of the left_child.
-				while (tmp->right_child->value != ft_nullptr)
+				while (tmp->right_child != ft_nullptr)
 					tmp = tmp->right_child;
 			}
 			else {	// if left_child doesn't exist,
