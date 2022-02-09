@@ -14,7 +14,7 @@ namespace ft
 		node left_child;
 		node right_child;
 		node parent;
-		RBColor colors;
+		RBColor color;
 	};
 } // namespace ft
 
