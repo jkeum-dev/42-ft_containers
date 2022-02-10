@@ -1,6 +1,8 @@
 #ifndef UTILS_HPP
 #define UTILS_HPP
 
+#include "Iterators.hpp"
+
 namespace ft
 {
 	/**
@@ -322,8 +324,8 @@ namespace ft
 	 * @return iterator_traits<InputIterator>::difference_type	distance between two iterators
 	 */
 	template <typename InputIterator>
-	typename iterator_traits<InputIterator>::difference_type distance(InputIterator first, InputIterator last) {
-		typename iterator_traits<InputIterator>::difference_type n = 0;
+	typename ft::iterator_traits<InputIterator>::difference_type distance(InputIterator first, InputIterator last) {
+		typename ft::iterator_traits<InputIterator>::difference_type n = 0;
 		while (first++ != last)
 			n++;
 		return n;
