@@ -45,7 +45,7 @@ namespace ft
 		}
 
 		// Destructor
-		virtual ~RBTree() {
+		~RBTree() {
 			clear();
 			_node_alloc.destroy(_nil);
 			_node_alloc.deallocate(_nil, 1);
