@@ -91,11 +91,21 @@ namespace ft
 		size_type	size() const { return _tree.size(); }
 		size_type max_size() const { return _alloc.max_size(); }
 		// Element access:
-		mapped_type& operator[] (const key_type& k);
-		pair<iterator, bool> insert(const value_type& val);	// single element
-		iterator insert(iterator position, const value_type& val);	// with hint
+		mapped_type& operator[] (const key_type& k) {
+			return (*(_tree.insert(make_pair(k, mapped_type())).first)).second;
+		}
+		pair<iterator, bool> insert(const value_type& val) {
+			ft::pair<node_type*, bool> res = _tree.insert(val);
+			return ft::make_pair(iterator(res.first), res.second);
+		}	// single element
+		iterator insert(iterator position, const value_type& val) {
+			return iterator(_tree.insert(val, position).first);
+		}	// with hint
 		template <class InputIterator>
-		void insert(InputIterator first, InputIterator last);	// range
+		void insert(InputIterator first, InputIterator last) {
+			while (first != last)
+				_tree.insert(*first++);
+		}	// range
 
 		/**
 		 * @brief Member variables
