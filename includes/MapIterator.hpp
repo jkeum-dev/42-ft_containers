@@ -38,7 +38,7 @@ namespace ft
 				tmp = _node->right_child;
 				// search the leftmost of the right_child.
 				while (tmp->left_child != ft_nullptr)
-					tmp = tnp->left_child;
+					tmp = tmp->left_child;
 			}
 			else {	// if right_child doesn't exist,
 				tmp = _node->parent;
@@ -73,7 +73,7 @@ namespace ft
 			else {	// if left_child doesn't exist,
 				tmp = _node->parent;
 				// if current node is left_child,
-				if (tmp->left_child == node) {
+				if (tmp->left_child == _node) {
 					node_type* tmp_parent;
 					while (true) {
 						tmp_parent = tmp->parent;
