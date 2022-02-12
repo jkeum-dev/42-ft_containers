@@ -3,6 +3,8 @@
 
 #include <stdexcept>
 #include "MapIterator.hpp"
+#include "printTree.hpp"
+#include <iostream>
 
 namespace ft
 {
@@ -94,10 +96,31 @@ namespace ft
 			}
 			// A new_node has been inserted,
 			// and now we need to balance it according to the rules of the RBTree.
-			insert_case1(node);
+			insert_case1(new_node);
 			_size++;
 			_nil->parent = get_max_value_node();
-			return ft::make_pair(node, true);
+			return ft::make_pair(new_node, true);
+		}
+
+		void clear(node_type* node = ft_nullptr) {
+			if (node == ft_nullptr)
+				node = _root;
+			if (node->left_child->value != ft_nullptr) {
+				clear(node->left_child);
+				node->left_child = _nil;
+			}
+			if (node->right_child->value != ft_nullptr) {
+				clear(node->right_child);
+				node->right_child = _nil;
+			}
+			// delete
+			if (node->value != ft_nullptr) {
+				if (node == _root)
+					_root = _nil;
+				_node_alloc.destroy(node);
+				_node_alloc.deallocate(node, 1);
+				_size--;
+			}
 		}
 
 		node_type* find(value_type val) const {
@@ -127,8 +150,15 @@ namespace ft
 				return ft_nullptr;
 			if (grand->left_child == node->parent)
 				return grand->right_child;
-			else if (grand->right_child == node->parent)
+			else
 				return grand->left_child;
+		}
+
+		node_type* get_sibling(node_type* node) const {
+			if (node == node->parent->left_child)
+				return node->parent->right_child;
+			else if (node == node->parent->right_child)
+				return node->parent->left_child;
 		}
 
 		node_type* make_nil() {
@@ -167,10 +197,13 @@ namespace ft
 				return _root;
 			else if (_comp(*_root->value, *hint->value) && _comp(*hint->value, val))
 				return hint;
+			else
+				return _root;
 		}
 
 		ft::pair<node_type*, bool> get_position(node_type* position, node_type* node) {
 			while (position->value != ft_nullptr) {
+				// std::cout << "here : " << position->value->first << std::endl;
 				if (_comp(*node->value, *position->value)) {
 					if (position->left_child->value == ft_nullptr) {
 						position->left_child = node;
@@ -183,7 +216,7 @@ namespace ft
 					else
 						position = position->left_child;
 				}
-				else if (_comp(*position->value, *node->value) {
+				else if (_comp(*position->value, *node->value)) {
 					if (position->right_child->value == ft_nullptr) {
 						position->right_child = node;
 						node->parent = position;
@@ -203,14 +236,16 @@ namespace ft
 
 		void insert_case1(node_type* node) {
 			// new_node is not root node
-			if (node->parent != ft_nullptr)
-				insert_case2(position, node);
+			if (node->parent->value != ft_nullptr)
+				insert_case2(node);
+			else
+				node->color = BLACK;
 		}
 
 		void insert_case2(node_type* node) {
 			// If new_node is RED, there is a problem.
 			if (node->parent->color == RED)
-				insert_case3(position, node);
+				insert_case3(node);
 		}
 
 		void insert_case3(node_type* node) {
@@ -225,7 +260,7 @@ namespace ft
 				insert_case1(grand);
 			}
 			else
-				insert_case4(position, node);
+				insert_case4(node);
 		}
 
 		void insert_case4(node_type* node) {
@@ -236,7 +271,7 @@ namespace ft
 				rotate_left(node->parent);
 				node = node->left_child;
 			} // new_node is parent's left_child and parent is grand's right_child,
-			else if (node = node->parent->left_child && node->parent == grand->right_child) {
+			else if (node == node->parent->left_child && node->parent == grand->right_child) {
 				rotate_right(node->parent);
 				node = node->right_child;
 			}
@@ -268,6 +303,8 @@ namespace ft
 				else
 					parent->right_child = child;
 			}
+			else
+				_root = child;
 		}
 
 		void rotate_right(node_type* node) {
@@ -285,6 +322,8 @@ namespace ft
 				else
 					parent->left_child = child;
 			}
+			else
+				_root = child;
 		}
 
 		node_type* get_max_value_node() const {
