@@ -56,6 +56,16 @@ namespace ft
 		// Assignment operator
 		RBTree& operator=(const RBTree& x) { if (this != &x) { clear(); copy(x); } return *this; }
 
+		void copy(node_type* node) {
+			if (node->value == ft_nullptr)
+				return;
+			insert(*node->value);
+			if (node->left_child->value != ft_nullptr)
+				copy(node->left_child);
+			if (node->right_child->value != ft_nullptr)
+				copy(node->right_child);
+		}
+
 		// Iterators:
 		node_type* get_begin() const {
 			node_type* tmp = _root;
@@ -100,6 +110,33 @@ namespace ft
 			_size++;
 			_nil->parent = get_max_value_node();
 			return ft::make_pair(new_node, true);
+		}
+
+		// Find the maximum in the left subtree or the minimum in the right subtree.
+		// Then, move the value to the node to be deleted.
+		size_type erase(node_type* node) {
+
+			// 삭제할 노드 M을 찾아야 함.(node의 왼쪽 서브트리에서 최댓값 / 오른쪽 서브트리에서 최솟값)
+			// node와 M을 바꾸고 M을 리턴받음.
+			node = replace_erase_node(node);
+
+			node_type* child;
+			if (node->right_child->value == ft_nullptr)
+				child = node->left_child;
+			else
+				child = node->right_child;
+			// 1) M이 RED인 경우, 무조건 그 자식 노드들은 nil이었을 것이다(BLACK). M을 nil로 바꾸면 됨.
+			replace_node(node, child);
+			if (node->color == BLACK) {
+				// 2) M이 BLACK이고 C가 RED인 경우, M을 C로 바꾸고 색을 BLACK으로 바꾼다.
+				if (child->color == RED)
+					child->color = BLACK;
+				else
+					delete_case1(child);
+				// 3) M과 C가 모두 BLACK인 경우, C는 무조건 nil이었을 것이다. 
+			}
+			
+			return 1;
 		}
 
 		void clear(node_type* node = ft_nullptr) {
@@ -157,8 +194,15 @@ namespace ft
 		node_type* get_sibling(node_type* node) const {
 			if (node == node->parent->left_child)
 				return node->parent->right_child;
-			else if (node == node->parent->right_child)
+			else
 				return node->parent->left_child;
+		}
+
+		node_type* get_max_value_node() const {
+			node_type* tmp = _root;
+			while (tmp->right_child->value != ft_nullptr)
+				tmp = tmp->right_child;
+			return tmp;
 		}
 
 		node_type* make_nil() {
@@ -176,16 +220,6 @@ namespace ft
 			node_type* res = _node_alloc.allocate(1);
 			_node_alloc.construct(res, node_type(val));
 			return res;
-		}
-
-		void copy(node_type* node) {
-			if (node->value == ft_nullptr)
-				return;
-			insert(*node->value);
-			if (node->left_child->value != ft_nullptr)
-				copy(node->left_child);
-			if (node->right_child->value != ft_nullptr)
-				copy(node->right_child);
 		}
 
 		node_type* check_hint(value_type val, node_type* hint) {
@@ -326,11 +360,108 @@ namespace ft
 				_root = child;
 		}
 
-		node_type* get_max_value_node() const {
-			node_type* tmp = _root;
-			while (tmp->right_child->value != ft_nullptr)
-				tmp = tmp->right_child;
-			return tmp;
+		node_type* replace_erase_node(node_type* node) {
+			// node의 왼쪽 서브트리에서 최댓값 / 오른쪽 서브트리에서 최솟값
+			node_type* result;
+			if (node->left_child->value != ft_nullptr) {
+				result = node->left_child;
+				while (result->right_child->value != ft_nullptr) {
+					if (result->right_child->value != ft_nullptr)
+						result = result->right_child;
+				}
+			}
+			else {
+				result = node->right_child;
+				while (result->left_child->value != ft_nullptr) {
+					if (result->left_child->value != ft_nullptr)
+						result = result->left_child;
+				}
+			}
+			node->value = result->value;
+			return result;
+		}
+
+		void replace_node(node_type* node, node_type* child) {
+			// The case where the parent of node becomes ft_nullptr
+			// can be handled in advance so that it does not come into delete_case.
+			child->parent = node->parent;
+			if (node->parent->left_child == node)
+				node->parent->left_child = child;
+			else if (node->parent->right_child == node)
+				node->parent->right_child = child;
+		}
+
+		void delete_case1(node_type* node) {
+			if (node->parent->value != ft_nullptr)
+				delete_case2(node);
+		}
+
+		void delete_case2(node_type* node) {
+			node_type* sibling = get_sibling(node);
+			if (sibling->color == RED) {
+				node->parent->color = RED;
+				sibling->color = BLACK;
+				if (node == node->parent->left_child)
+					rotate_left(node->parent);
+				else
+					rotate_left(node->parent);
+			}
+			delete_case3(node);
+		}
+
+		void delete_case3(node_type* node) {
+			node_type* sibling = get_sibling(node);
+			if (node->parent->color == BLACK && sibling->color == BLACK &&
+					sibling->left_child->color == BLACK && sibling->right_child->color == BLACK) {
+				sibling->color = RED;
+				delete_case1(node->parent);
+			}
+			else
+				delete_case4(node);
+		}
+
+		void delete_case4(node_type* node) {
+			node_type* sibling = get_sibling(node);
+			if (node->parent->color == RED && sibling->color == BLACK &&
+					sibling->left_child->color == BLACK && sibling->right_child->color == BLACK) {
+				sibling->color = RED;
+				node->parent->color = BLACK;
+			}
+			else
+				delete_case5(node);
+		}
+
+		void delete_case5(node_type* node) {
+			node_type* sibling = get_sibling(node);
+			if (sibling->color == BLACK) {
+				if (node == node->parent->left_child &&
+						sibling->right_child->color == BLACK && sibling->left_child->color == RED) {
+					sibling->color = RED;
+					sibling->left_child->color = BLACK;
+					rotate_right(sibling);
+				}
+				else if (node == node->parent->right_child &&
+								sibling->left_child->color == BLACK && sibling->right_child->color == RED) {
+					sibling->color = RED;
+					sibling->right_child->color = BLACK;
+					rotate_left(sibling);
+				}
+			}
+			delete_case6(node);
+		}
+
+		void delete_case6(node_type* node) {
+			node_type* sibling = get_sibling(node);
+			sibling->color = node->parent->color;
+			node->parent->color = BLACK;
+			if (node == node->parent->left_child) {
+				sibling->right_child->color = BLACK;
+				rotate_left(node->parent);
+			}
+			else {
+				sibling->left_child->color = BLACK;
+				rotate_right(node->parent);
+			}
 		}
 
 		/**
