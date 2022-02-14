@@ -175,8 +175,6 @@ namespace ft
 			return res;
 		}
 
-		void showMap() { ft::printMap(_root, 0); }
-
 	private :
 		node_type* get_grandparent(node_type* node) const {
 			if (node != ft_nullptr && node->parent != ft_nullptr)
@@ -381,7 +379,7 @@ namespace ft
 				else
 					result = node;
 			}
-			node->value->first = result->value->first;
+			// node->value->first = result->value->first;
 			node->value->second = result->value->second;
 			return result;
 		}

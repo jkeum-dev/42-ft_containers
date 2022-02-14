@@ -22,11 +22,10 @@ namespace ft
 		 */
 		typedef Key																		key_type;
 		typedef T																			mapped_type;
-		typedef ft::pair<key_type, mapped_type>	value_type;
+		typedef ft::pair<const key_type, mapped_type>	value_type;
 		typedef Compare																key_compare;
 
-		// template <class _Key, class _T, class _Compare, class _Alloc>
-		class value_compare : binary_function<value_type, value_type, bool> {		
+		class value_compare : binary_function<value_type, value_type, bool> {
 		protected:
 			Compare comp;
 			value_compare(Compare c) : comp(c) {}  // constructed with map's comparison object
@@ -114,10 +113,7 @@ namespace ft
 			while (first != last)
 				_tree.erase(*first++);
 		}
-
 		void clear() { _tree.clear(); }
-
-		void showTree() { _tree.showMap(); }
 
 		/**
 		 * @brief Member variables
