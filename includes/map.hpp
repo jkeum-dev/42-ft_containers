@@ -113,8 +113,11 @@ namespace ft
 			while (first != last)
 				_tree.erase(*first++);
 		}
+		void swap(map& x);
 		void clear() { _tree.clear(); }
-
+		// Observers:
+		key_compare key_comp() const { return key_compare(); }
+		value_compare value_comp() const { return value_compare(); }
 		/**
 		 * @brief Member variables
 		 */
