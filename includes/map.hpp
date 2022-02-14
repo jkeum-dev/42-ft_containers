@@ -22,7 +22,7 @@ namespace ft
 		 */
 		typedef Key																		key_type;
 		typedef T																			mapped_type;
-		typedef ft::pair<const key_type, mapped_type>	value_type;
+		typedef ft::pair<key_type, mapped_type>	value_type;
 		typedef Compare																key_compare;
 
 		// template <class _Key, class _T, class _Compare, class _Alloc>
@@ -108,11 +108,16 @@ namespace ft
 			while (first != last)
 				_tree.insert(*first++);
 		}	// range
-		void erase(iterator position);
-		size_type erase(const key_type& k);
-		void erase(iterator first, iterator last);
+		void erase(iterator position) { _tree.erase(position.base()); }
+		size_type erase(const key_type& k) { return _tree.erase(_tree.find(value_type(k, mapped_type()))); }
+		void erase(iterator first, iterator last) {
+			while (first != last)
+				_tree.erase(*first++);
+		}
 
 		void clear() { _tree.clear(); }
+
+		void showTree() { _tree.showMap(); }
 
 		/**
 		 * @brief Member variables

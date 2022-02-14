@@ -115,19 +115,18 @@ namespace ft
 		// Find the maximum in the left subtree or the minimum in the right subtree.
 		// Then, move the value to the node to be deleted.
 		size_type erase(node_type* node) {
-
-			// 삭제할 노드 M을 찾아야 함.(node의 왼쪽 서브트리에서 최댓값 / 오른쪽 서브트리에서 최솟값)
-			// node와 M을 바꾸고 M을 리턴받음.
-			node = replace_erase_node(node);
-
+			// node의 왼쪽 서브트리에서 최댓값 / 오른쪽 서브트리에서 최솟값을 찾음.
+			// node와 M의 값을 바꾸고 M을 리턴받음.
+			node_type* real = replace_erase_node(node);
+			// 진짜 삭제할 노드는 M(real)이고, 그 자식 노드를 child라고 함.
 			node_type* child;
-			if (node->right_child->value == ft_nullptr)
-				child = node->left_child;
+			if (real->right_child->value == ft_nullptr)
+				child = real->left_child;
 			else
-				child = node->right_child;
+				child = real->right_child;
 			// 1) M이 RED인 경우, 무조건 그 자식 노드들은 nil이었을 것이다(BLACK). M을 nil로 바꾸면 됨.
-			replace_node(node, child);
-			if (node->color == BLACK) {
+			replace_node(real, child);
+			if (real->color == BLACK) {
 				// 2) M이 BLACK이고 C가 RED인 경우, M을 C로 바꾸고 색을 BLACK으로 바꾼다.
 				if (child->color == RED)
 					child->color = BLACK;
@@ -135,7 +134,10 @@ namespace ft
 					delete_case1(child);
 				// 3) M과 C가 모두 BLACK인 경우, C는 무조건 nil이었을 것이다. 
 			}
-			
+			_size--;
+			_nil->parent = get_max_value_node();
+			_node_alloc.destroy(real);
+			_node_alloc.deallocate(real, 1);
 			return 1;
 		}
 
@@ -172,6 +174,8 @@ namespace ft
 			}
 			return res;
 		}
+
+		void showMap() { ft::printMap(_root, 0); }
 
 	private :
 		node_type* get_grandparent(node_type* node) const {
@@ -365,19 +369,20 @@ namespace ft
 			node_type* result;
 			if (node->left_child->value != ft_nullptr) {
 				result = node->left_child;
-				while (result->right_child->value != ft_nullptr) {
-					if (result->right_child->value != ft_nullptr)
-						result = result->right_child;
-				}
+				while (result->right_child->value != ft_nullptr)
+					result = result->right_child;
 			}
 			else {
-				result = node->right_child;
-				while (result->left_child->value != ft_nullptr) {
-					if (result->left_child->value != ft_nullptr)
+				if (node->right_child->value != ft_nullptr) {
+					result = node->right_child;
+					while (result->left_child->value != ft_nullptr)
 						result = result->left_child;
 				}
+				else
+					result = node;
 			}
-			node->value = result->value;
+			node->value->first = result->value->first;
+			node->value->second = result->value->second;
 			return result;
 		}
 
@@ -404,7 +409,7 @@ namespace ft
 				if (node == node->parent->left_child)
 					rotate_left(node->parent);
 				else
-					rotate_left(node->parent);
+					rotate_right(node->parent);
 			}
 			delete_case3(node);
 		}
