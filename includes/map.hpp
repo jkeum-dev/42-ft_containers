@@ -128,6 +128,8 @@ namespace ft
 		const_iterator	upper_bound (const key_type& k) const { return const_iterator(_tree.upper_bound(value_type(k, mapped_type()))); }
 		pair<iterator,iterator>							equal_range (const key_type& k) { return ft::make_pair(lower_bound(k), upper_bound(k)); }
 		pair<const_iterator,const_iterator>	equal_range (const key_type& k) const { return ft::make_pair(lower_bound(k), upper_bound(k)); }
+		// Allocator:
+		allocator_type get_allocator() const { return _alloc; }
 		/**
 		 * @brief Member variables
 		 */
