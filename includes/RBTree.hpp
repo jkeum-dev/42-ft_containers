@@ -112,8 +112,6 @@ namespace ft
 			return ft::make_pair(new_node, true);
 		}
 
-		// Find the maximum in the left subtree or the minimum in the right subtree.
-		// Then, move the value to the node to be deleted.
 		size_type erase(node_type* node) {
 			// node의 왼쪽 서브트리에서 최댓값 / 오른쪽 서브트리에서 최솟값을 찾음.
 			// node와 M의 값을 바꾸고 M을 리턴받음.
@@ -162,17 +160,38 @@ namespace ft
 			}
 		}
 
+		// Operations:
 		node_type* find(value_type val) const {
 			node_type* res = _root;
 			if (_size == 0)
-				return ft_nullptr;
-			while (res != ft_nullptr && val != *res->value) {
+				return _nil;
+			while (res->value != ft_nullptr && (_comp(val, *res->value) || _comp(*res->value, val))) {
 				if (_comp(val, *res->value))
 					res = res->left_child;
 				else
 					res = res->right_child;
 			}
 			return res;
+		}
+
+		node_type* lower_bound(const value_type& val) {
+			iterator it(get_begin());
+			iterator ite(get_end());
+			while (it != ite) {
+				if (!_comp(*it++, val))
+					break;
+			}
+			return it.base();
+		}
+
+		node_type* upper_bound(const value_type& val) {
+			iterator it(get_begin());
+			iterator ite(get_end());
+			while (it != ite) {
+				if (_comp(val, *it++))
+					break;
+			}
+			return it.base();
 		}
 
 	private :

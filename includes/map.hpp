@@ -94,30 +94,40 @@ namespace ft
 		mapped_type& operator[](const key_type& k) {
 			return (*(_tree.insert(make_pair(k, mapped_type())).first)).second;
 		}
-		pair<iterator, bool> insert(const value_type& val) {
+		pair<iterator, bool>	insert(const value_type& val) {
 			ft::pair<node_type*, bool> res = _tree.insert(val);
 			return ft::make_pair(iterator(res.first), res.second);
 		}	// single element
-		iterator insert(iterator position, const value_type& val) {
+		iterator							insert(iterator position, const value_type& val) {
 			return iterator(_tree.insert(val, position).first);
 		}	// with hint
 		template <class InputIterator>
-		void insert(InputIterator first, InputIterator last,
+		void									insert(InputIterator first, InputIterator last,
 		typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = ft_nullptr) {
 			while (first != last)
 				_tree.insert(*first++);
 		}	// range
-		void erase(iterator position) { _tree.erase(position.base()); }
-		size_type erase(const key_type& k) { return _tree.erase(_tree.find(value_type(k, mapped_type()))); }
-		void erase(iterator first, iterator last) {
+		void			erase(iterator position) { _tree.erase(position.base()); }
+		size_type	erase(const key_type& k) { return _tree.erase(_tree.find(value_type(k, mapped_type()))); }
+		void			erase(iterator first, iterator last) {
 			while (first != last)
 				_tree.erase(*first++);
 		}
 		void swap(map& x);
 		void clear() { _tree.clear(); }
 		// Observers:
-		key_compare key_comp() const { return key_compare(); }
-		value_compare value_comp() const { return value_compare(); }
+		key_compare		key_comp() const { return key_compare(); }
+		value_compare	value_comp() const { return value_compare(); }
+		// Operations:
+		iterator				find(const key_type& k) { return iterator(_tree.find(value_type(k, mapped_type()))); }
+		const_iterator	find(const key_type& k) const { return const_iterator(_tree.find(value_type(k, mapped_type()))); }
+		size_type				count(const key_type& k) const { if (_tree.find(value_type(k, mapped_type()))) return 1; else return 0; }
+		iterator				lower_bound (const key_type& k) { return iterator(_tree.lower_bound(value_type(k, mapped_type()))); }
+		const_iterator	lower_bound (const key_type& k) const { return const_iterator(_tree.lower_bound(value_type(k, mapped_type()))); }
+		iterator				upper_bound (const key_type& k) { return iterator(_tree.upper_bound(value_type(k, mapped_type()))); }
+		const_iterator	upper_bound (const key_type& k) const { return const_iterator(_tree.upper_bound(value_type(k, mapped_type()))); }
+		pair<iterator,iterator>							equal_range (const key_type& k) { return ft::make_pair(lower_bound(k), upper_bound(k)); }
+		pair<const_iterator,const_iterator>	equal_range (const key_type& k) const { return ft::make_pair(lower_bound(k), upper_bound(k)); }
 		/**
 		 * @brief Member variables
 		 */
