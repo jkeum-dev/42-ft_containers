@@ -139,6 +139,28 @@ namespace ft
 			return 1;
 		}
 
+		void swap(RBTree& x) {
+			RBTree tmp;
+			tmp._root = _root;
+			tmp._nil = _nil;
+			tmp._size = _size;
+			tmp._comp = _comp;
+			tmp._node_alloc = _node_alloc;
+
+			_root = x._root;
+			_nil = x._nil;
+			_size = x._size;
+			_comp = x._comp;
+			_node_alloc = x._node_alloc;
+
+			x._root = tmp._root;
+			x._nil = tmp._nil;
+			x._size = tmp._size;
+			x._comp = tmp._comp;
+			x._node_alloc = tmp._node_alloc;
+			delete tmp;
+		}
+
 		void clear(node_type* node = ft_nullptr) {
 			if (node == ft_nullptr)
 				node = _root;

@@ -113,7 +113,15 @@ namespace ft
 			while (first != last)
 				_tree.erase(*first++);
 		}
-		void swap(map& x);
+		void swap(map& x) {
+			_tree.swap(x._tree);
+			allocator_type tmp_alloc = _alloc;
+			_alloc = x._alloc;
+			x._alloc = tmp_alloc;
+			key_compare tmp_comp = _comp;
+			_comp = x._comp;
+			x._comp = tmp_comp;
+		}
 		void clear() { _tree.clear(); }
 		// Observers:
 		key_compare		key_comp() const { return key_compare(); }
