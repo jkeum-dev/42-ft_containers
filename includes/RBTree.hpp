@@ -196,25 +196,29 @@ namespace ft
 			return res;
 		}
 
-		node_type* lower_bound(const value_type& val) {
+		node_type* lower_bound(const value_type& val) const {
 			iterator it(get_begin());
 			iterator ite(get_end());
 			while (it != ite) {
-				if (!_comp(*it++, val))
+				if (!_comp(*it, val))
 					break;
+				it++;
 			}
 			return it.base();
 		}
 
-		node_type* upper_bound(const value_type& val) {
+		node_type* upper_bound(const value_type& val) const {
 			iterator it(get_begin());
 			iterator ite(get_end());
 			while (it != ite) {
-				if (_comp(val, *it++))
+				if (_comp(val, *it))
 					break;
+				it++;
 			}
 			return it.base();
 		}
+
+		void showMap() { ft::printMap(_root, 0); }
 
 	private :
 		node_type* get_grandparent(node_type* node) const {
@@ -280,7 +284,6 @@ namespace ft
 
 		ft::pair<node_type*, bool> get_position(node_type* position, node_type* node) {
 			while (position->value != ft_nullptr) {
-				// std::cout << "here : " << position->value->first << std::endl;
 				if (_comp(*node->value, *position->value)) {
 					if (position->left_child->value == ft_nullptr) {
 						position->left_child = node;
