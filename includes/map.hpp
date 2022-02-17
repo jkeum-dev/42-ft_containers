@@ -92,7 +92,7 @@ namespace ft
 		size_type max_size() const { return _alloc.max_size(); }
 		// Element access:
 		mapped_type& operator[](const key_type& k) {
-			return (*(_tree.insert(make_pair(k, mapped_type())).first)).second;
+			return (*(_tree.insert(make_pair(k, mapped_type())).first)).value->second;
 		}
 		pair<iterator, bool>	insert(const value_type& val) {
 			ft::pair<node_type*, bool> res = _tree.insert(val);
