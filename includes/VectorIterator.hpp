@@ -25,8 +25,8 @@ namespace ft
 		typedef typename ft::iterator<ft::random_access_iterator_tag, T>::reference					reference;
 
 		VectorIterator(pointer ptr = ft_nullptr) : _current(ptr) {}	// Default constructor
-		VectorIterator(const VectorIterator& copy) : _current(copy._current) {}	// Copy constructor
-		VectorIterator& operator=(const VectorIterator& copy) { if (this != &copy) this->_current = copy._current; return *this; }	// Assignment operator
+		VectorIterator(const VectorIterator<T>& copy) : _current(copy.base()) {}	// Copy constructor
+		VectorIterator& operator=(const VectorIterator<T>& copy) { if (this != &copy) this->_current = copy.base(); return *this; }	// Assignment operator
 		virtual ~VectorIterator() {}	// Destructor
 		pointer const & base() const { return _current; }	// Getter
 		operator VectorIterator<const T>() const { return VectorIterator<const T>(_current); }	// Overloading type casts

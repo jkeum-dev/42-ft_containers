@@ -19,8 +19,8 @@ namespace ft
 		typedef ft::RBTreeNode<T>																														node_type;
 
 		MapIterator(node_type* ptr = ft_nullptr) : _node(ptr) {}	// Default constructor
-		MapIterator(const MapIterator& copy) : _node(copy._node) {}	// Copy constructor
-		MapIterator& operator=(const MapIterator& copy) { if (this != &copy) this->_node = copy._node; return *this; }	// Assignment operator
+		MapIterator(const MapIterator<T>& copy) : _node(copy.base()) {}	// Copy constructor
+		MapIterator& operator=(const MapIterator<T>& copy) { if (this != &copy) this->_node = copy.base(); return *this; }	// Assignment operator
 		virtual ~MapIterator() {}	// Destructor
 		node_type* const & base() const { return _node; }	// Getter
 		operator MapIterator<const T>() const { return MapIterator<const T>(_node); }	// Overloading type casts
