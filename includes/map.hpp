@@ -75,7 +75,7 @@ namespace ft
 		~map() {}
 
 		// Assignment operator
-		map& operator=(const map& x) { if (this != x) _tree.copy(x._tree); return *this; }
+		map& operator=(const map& x) { if (this != &x) _tree.copy(x._tree); return *this; }
 
 		// Iterators:
 		iterator 				begin() { return iterator(_tree.get_begin()); }
@@ -99,7 +99,7 @@ namespace ft
 			return ft::make_pair(iterator(res.first), res.second);
 		}	// single element
 		iterator							insert(iterator position, const value_type& val) {
-			return iterator(_tree.insert(val, position).first);
+			return iterator(_tree.insert(val, position.base()).first);
 		}	// with hint
 		template <class InputIterator>
 		void									insert(InputIterator first, InputIterator last,

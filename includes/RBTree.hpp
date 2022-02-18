@@ -54,7 +54,7 @@ namespace ft
 		}
 
 		// Assignment operator
-		RBTree& operator=(const RBTree& x) { if (this != &x) { clear(); copy(x); } return *this; }
+		RBTree& operator=(const RBTree& x) { if (this != &x) copy(x); return *this; }
 
 		void copy(const RBTree& x) {
 			clear();
