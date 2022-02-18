@@ -56,6 +56,11 @@ namespace ft
 		// Assignment operator
 		RBTree& operator=(const RBTree& x) { if (this != &x) { clear(); copy(x); } return *this; }
 
+		void copy(const RBTree& x) {
+			clear();
+			copy(x._root);
+		}
+
 		void copy(node_type* node) {
 			if (node->value == ft_nullptr)
 				return;
