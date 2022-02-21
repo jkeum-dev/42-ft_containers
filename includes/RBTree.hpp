@@ -2,6 +2,7 @@
 #define RBTREE_HPP
 
 #include <stdexcept>
+#include <cstring>
 #include "MapIterator.hpp"
 #include "printTree.hpp"
 #include <iostream>
@@ -41,7 +42,6 @@ namespace ft
 		RBTree(const RBTree& _copy) : _root(ft_nullptr), _nil(ft_nullptr), _size(0),
 																	_comp(value_comp()), _node_alloc(node_allocator_type()) {
 			_nil = make_nil();
-			clear();
 			copy(_copy);
 			_nil->parent = get_max_value_node();
 		}
@@ -121,6 +121,7 @@ namespace ft
 			// node의 왼쪽 서브트리에서 최댓값 / 오른쪽 서브트리에서 최솟값을 찾음.
 			// node와 M의 값을 바꾸고 M을 리턴받음.
 			node_type* real = replace_erase_node(node);
+			std::cout << "erase 4" << std::endl;
 			// 진짜 삭제할 노드는 M(real)이고, 그 자식 노드를 child라고 함.
 			node_type* child;
 			if (real->right_child->value == ft_nullptr)
@@ -138,32 +139,17 @@ namespace ft
 				// 3) M과 C가 모두 BLACK인 경우, C는 무조건 nil이었을 것이다. 
 			}
 			_size--;
+			delete real;
 			_nil->parent = get_max_value_node();
-			_node_alloc.destroy(real);
-			_node_alloc.deallocate(real, 1);
 			return 1;
 		}
 
 		void swap(RBTree& x) {
-			RBTree tmp;
-			tmp._root = _root;
-			tmp._nil = _nil;
-			tmp._size = _size;
-			tmp._comp = _comp;
-			tmp._node_alloc = _node_alloc;
-
-			_root = x._root;
-			_nil = x._nil;
-			_size = x._size;
-			_comp = x._comp;
-			_node_alloc = x._node_alloc;
-
-			x._root = tmp._root;
-			x._nil = tmp._nil;
-			x._size = tmp._size;
-			x._comp = tmp._comp;
-			x._node_alloc = tmp._node_alloc;
-			delete tmp;
+			swap(_root, x._root);
+			swap(_nil, x._nil);
+			swap(_comp, x._comp);
+			swap(_size, x._size);
+			swap(_node_alloc, x._node_alloc);
 		}
 
 		void clear(node_type* node = ft_nullptr) {
@@ -419,17 +405,19 @@ namespace ft
 				while (result->right_child->value != ft_nullptr)
 					result = result->right_child;
 			}
-			else {
-				if (node->right_child->value != ft_nullptr) {
+			// else {
+				else if (node->right_child->value != ft_nullptr) {
 					result = node->right_child;
 					while (result->left_child->value != ft_nullptr)
 						result = result->left_child;
 				}
-				else
+			// }
+				else {
 					result = node;
-			}
-			// node->value->first = result->value->first;
-			node->value->second = result->value->second;
+				}
+			if (result != node)
+				memcpy(node->value, result->value, sizeof(result->value)*4);
+				std::cout << "erase 4..." << std::endl;
 			return result;
 		}
 
@@ -439,7 +427,7 @@ namespace ft
 			child->parent = node->parent;
 			if (node->parent->left_child == node)
 				node->parent->left_child = child;
-			else if (node->parent->right_child == node)
+			else// if (node->parent->right_child == node)
 				node->parent->right_child = child;
 		}
 
@@ -514,6 +502,13 @@ namespace ft
 				sibling->left_child->color = BLACK;
 				rotate_right(node->parent);
 			}
+		}
+
+		template <typename _T>
+		void swap(_T& a, _T& b) {
+			_T tmp(a);
+			a = b;
+			b = tmp;
 		}
 
 		/**

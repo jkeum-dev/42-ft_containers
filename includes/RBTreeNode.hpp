@@ -44,6 +44,9 @@ namespace ft
 				alloc.deallocate(value, 1);
 			}
 		}
+
+		bool operator==(const RBTreeNode& node) const { return *this->value == *node->value; }
+		bool operator!=(const RBTreeNode& node) const { return *this->value != *node->value; }
 	};
 } // namespace ft
 

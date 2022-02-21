@@ -83,9 +83,9 @@ namespace ft
 		}
 		MapIterator operator--(int) { MapIterator tmp = *this; --(*this); return tmp; }
 
-	/**
-	 * @brief Relational operators
-	 */
+		/**
+		 * @brief Relational operators
+		 */
 		template <typename _T, typename _P, typename _R>
 		bool operator==(const MapIterator<_T, _P, _R>& iter) { return _node == iter.base(); }
 
