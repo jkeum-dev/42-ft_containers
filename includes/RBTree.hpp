@@ -437,12 +437,6 @@ namespace ft
 			else if (tmp_parent->right_child == node)
 				tmp_parent->right_child = result;
 
-			// result의 parent 연결
-			if (result->parent == node)
-				result->parent = node->parent;
-			else
-				result->parent = node;
-
 			if (result == tmp_left) {
 				// result의 형제를 result의 left/right_child로 연결
 				tmp_right->parent = result;
@@ -457,6 +451,18 @@ namespace ft
 				node->parent = result;
 				result->right_child = node;
 			}
+			else {
+				// result와 node가 멀리 떨어진 경우
+				tmp_left->parent = result;
+				result->left_child = tmp_left;
+				tmp_right->parent = result;
+				result->right_child = tmp_right;
+				node->parent = result->parent;
+				result->parent->right_child = node;
+			}
+
+			// result의 parent 연결
+			result->parent = tmp_parent;
 
 			if (result->parent->value == ft_nullptr)
 				_root = result;
