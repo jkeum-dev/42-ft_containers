@@ -110,19 +110,10 @@ namespace ft
 		void			erase(iterator position) { _tree.erase(position.base()); }
 		size_type	erase(const key_type& k) { return _tree.erase(_tree.find(value_type(k, mapped_type()))); }
 		void			erase(iterator first, iterator last) {
-			while (first != last) {
+			while (first != last)
 				erase(first++);
-				showTree();
-			}
 		}
 		void swap(map& x) {
-			// _tree.swap(x._tree);
-			// allocator_type tmp_alloc = _alloc;
-			// _alloc = x._alloc;
-			// x._alloc = tmp_alloc;
-			// key_compare tmp_comp = _comp;
-			// _comp = x._comp;
-			// x._comp = tmp_comp;
 			_tree.swap(x._tree);
 		}
 		void clear() { _tree.clear(); }

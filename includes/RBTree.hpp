@@ -118,10 +118,11 @@ namespace ft
 		}
 
 		size_type erase(node_type* node) {
+			if (node->value == ft_nullptr)
+				return 0;
 			// node의 왼쪽 서브트리에서 최댓값 / 오른쪽 서브트리에서 최솟값을 찾음.
 			// node와 M의 값을 바꾸고 M을 리턴받음.
 			node_type* real = replace_erase_node(node);
-			std::cout << "erase 4" << std::endl;
 			// 진짜 삭제할 노드는 M(real)이고, 그 자식 노드를 child라고 함.
 			node_type* child;
 			if (real->right_child->value == ft_nullptr)
@@ -139,6 +140,8 @@ namespace ft
 				// 3) M과 C가 모두 BLACK인 경우, C는 무조건 nil이었을 것이다. 
 			}
 			_size--;
+			if (real->parent->value == ft_nullptr)
+				_root = _nil;
 			delete real;
 			_nil->parent = get_max_value_node();
 			return 1;
@@ -398,27 +401,69 @@ namespace ft
 		}
 
 		node_type* replace_erase_node(node_type* node) {
-			// node의 왼쪽 서브트리에서 최댓값 / 오른쪽 서브트리에서 최솟값
+			// node의 left_child가 있으면, 왼쪽 서브트리에서 최댓값,
+			// node의 left_child가 없으면, 오른쪽 서브트리에서 최솟값을 찾는다.
+			// 찾은 값의 value를 node에 복사하고, 찾은 그 노드는 삭제해야 하므로 리턴한다.
 			node_type* result;
 			if (node->left_child->value != ft_nullptr) {
 				result = node->left_child;
 				while (result->right_child->value != ft_nullptr)
 					result = result->right_child;
 			}
-			// else {
-				else if (node->right_child->value != ft_nullptr) {
-					result = node->right_child;
-					while (result->left_child->value != ft_nullptr)
-						result = result->left_child;
-				}
-			// }
-				else {
-					result = node;
-				}
-			if (result != node)
-				memcpy(node->value, result->value, sizeof(result->value)*4);
-				std::cout << "erase 4..." << std::endl;
-			return result;
+			else if (node->right_child->value != ft_nullptr) {
+				result = node->right_child;
+				while (result->left_child->value != ft_nullptr)
+					result = result->left_child;
+			}
+			else
+				return node;
+
+			node_type* tmp_parent = node->parent;
+			node_type* tmp_left = node->left_child;
+			node_type* tmp_right = node->right_child;
+			RBColor tmp_color = node->color;
+
+			// node의 left/right_child 설정
+			node->left_child = result->left_child;
+			if (result->left_child->value != ft_nullptr)
+				result->left_child->parent = node;
+			node->right_child = result->right_child; 
+			if (result->right_child->value != ft_nullptr)
+				result->right_child->parent = node;
+
+			// result를 node->parent의 left/right_child로 설정
+			if (tmp_parent->left_child == node)
+				tmp_parent->left_child = result;
+			else if (tmp_parent->right_child == node)
+				tmp_parent->right_child = result;
+
+			// result의 parent 연결
+			if (result->parent == node)
+				result->parent = node->parent;
+			else
+				result->parent = node;
+
+			if (result == tmp_left) {
+				// result의 형제를 result의 left/right_child로 연결
+				tmp_right->parent = result;
+				result->right_child = tmp_right;
+				// node를 result의 left/right_child로 연결
+				node->parent = result;
+				result->left_child = node;
+			}
+			else if (result == tmp_right) {
+				tmp_left->parent = result;
+				result->left_child = tmp_left;
+				node->parent = result;
+				result->right_child = node;
+			}
+
+			if (result->parent->value == ft_nullptr)
+				_root = result;
+			node->color = result->color;
+			result->color = tmp_color;
+
+			return node;
 		}
 
 		void replace_node(node_type* node, node_type* child) {
@@ -473,6 +518,7 @@ namespace ft
 
 		void delete_case5(node_type* node) {
 			node_type* sibling = get_sibling(node);
+			node_type* tmp = node->parent;
 			if (sibling->color == BLACK) {
 				if (node == node->parent->left_child &&
 						sibling->right_child->color == BLACK && sibling->left_child->color == RED) {
@@ -487,6 +533,7 @@ namespace ft
 					rotate_left(sibling);
 				}
 			}
+			node->parent = tmp;
 			delete_case6(node);
 		}
 
