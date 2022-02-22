@@ -133,8 +133,6 @@ namespace ft
 		// Allocator:
 		allocator_type get_allocator() const { return _alloc; }
 
-		void showTree() { _tree.showMap(); }
-
 		/**
 		 * @brief Member variables
 		 */
@@ -177,10 +175,9 @@ namespace ft
 		return !(lhs < rhs);
 	}
 
+	// swap
 	template <class Key, class T, class Compare, class Alloc>
-  void swap(map<Key, T, Compare, Alloc>& x, map<Key, T, Compare, Alloc>& y) {
-		x.swap(y);
-	}
+	void swap(map<Key, T, Compare, Alloc>& x, map<Key, T, Compare, Alloc>& y) { x.swap(y); }
 } // namespace ft
 
 #endif

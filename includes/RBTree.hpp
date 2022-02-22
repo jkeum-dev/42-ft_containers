@@ -2,13 +2,18 @@
 #define RBTREE_HPP
 
 #include <stdexcept>
-#include <cstring>
 #include "MapIterator.hpp"
-#include "printTree.hpp"
-#include <iostream>
 
 namespace ft
 {
+	/**
+	 * @brief RBTree class
+	 * map base - red black tree
+	 * 
+	 * @tparam T				value_type (pair of key and mapped_type)
+	 * @tparam Compare	A binary predicate that takes two element keys as arguments and returns a bool.
+	 * @tparam Alloc		Type of the allocator object used to define the storage allocation model.
+	 */
 	template < typename T, typename Compare = ft::less<T>, typename Alloc = std::allocator<T> >
 	class RBTree {
 	public :
@@ -211,8 +216,6 @@ namespace ft
 			}
 			return it.base();
 		}
-
-		void showMap() { ft::printMap(_root, 0); }
 
 	private :
 		node_type* get_grandparent(node_type* node) const {

@@ -3,7 +3,6 @@
 
 #include "utils.hpp"
 #include "RBTreeNode.hpp"
-#include <iostream>
 
 namespace ft
 {
