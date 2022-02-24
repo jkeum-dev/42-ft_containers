@@ -6,23 +6,22 @@
 
 namespace ft
 {
-	template <typename T, typename Pointer = T*, typename Reference = T&>
+	template <typename T, bool B>
 	class MapIterator : public ft::iterator<ft::bidirectional_iterator_tag, T>
 	{
 	public :
 		typedef T																																						value_type;
-		typedef Pointer																																			pointer;
-		typedef Reference																																		reference;
+		typedef typename ft::choose<B, const T*, T*>::type																	pointer;
+		typedef typename ft::choose<B, const T&, T&>::type																	reference;
 		typedef typename ft::iterator<ft::bidirectional_iterator_tag, T>::difference_type		difference_type;
 		typedef typename ft::iterator<ft::bidirectional_iterator_tag, T>::iterator_category	iterator_category;
 		typedef ft::RBTreeNode<T>																														node_type;
 
 		MapIterator(node_type* ptr = ft_nullptr) : _node(ptr) {}	// Default constructor
-		MapIterator(const MapIterator<T>& copy) : _node(copy.base()) {}	// Copy constructor
+		MapIterator(const MapIterator<T, false>& copy) : _node(copy.base()) {}	// Copy constructor
 		MapIterator& operator=(const MapIterator& copy) { if (this != &copy) this->_node = copy.base(); return *this; }	// Assignment operator
 		virtual ~MapIterator() {}	// Destructor
 		node_type* const & base() const { return _node; }	// Getter
-		operator MapIterator<const T>() const { return MapIterator<const T>(_node); }	// Overloading type casts
 
 		/**
 		 * @brief Operators
@@ -85,11 +84,8 @@ namespace ft
 		/**
 		 * @brief Relational operators
 		 */
-		template <typename _T, typename _P, typename _R>
-		bool operator==(const MapIterator<_T, _P, _R>& iter) { return _node == iter.base(); }
-
-		template <typename _T, typename _P, typename _R>
-		bool operator!=(const MapIterator<_T, _P, _R>& iter) { return _node != iter.base(); }
+		bool operator==(const MapIterator& iter) { return _node == iter.base(); }
+		bool operator!=(const MapIterator& iter) { return _node != iter.base(); }
 
 	protected :
 		node_type* _node;

@@ -29,8 +29,8 @@ namespace ft
 		typedef Alloc																							allocator_type;
 		typedef size_t																						size_type;
 		typedef ft::RBTreeNode<T>																	node_type;
-		typedef ft::MapIterator<T>																iterator;
-		typedef ft::MapIterator<const T>													const_iterator;
+		typedef typename ft::MapIterator<T, false>								iterator;
+		typedef typename ft::MapIterator<T, true>									const_iterator;
 		typedef typename Alloc::template rebind<node_type>::other node_allocator_type;
 
 		/**
