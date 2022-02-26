@@ -1,7 +1,7 @@
 #ifndef MAP_HPP
 #define MAP_HPP
 
-#include "RBTree.hpp"
+#include "MapTree.hpp"
 
 namespace ft
 {
@@ -49,7 +49,7 @@ namespace ft
 		typedef ft::reverse_iterator<const_iterator>				const_reverse_iterator;
 		typedef typename allocator_type::difference_type		difference_type;
 		typedef typename allocator_type::size_type					size_type;
-		typedef ft::RBTree<value_type, value_compare>				rb_tree;
+		typedef ft::MapTree<value_type, value_compare>			rb_tree;
 		typedef ft::RBTreeNode<value_type>									node_type;
 
 		/**

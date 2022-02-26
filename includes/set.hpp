@@ -1,7 +1,7 @@
 #ifndef SET_HPP
 #define SET_HPP
 
-#include "RBTree.hpp"
+#include "SetTree.hpp"
 
 namespace ft
 {
@@ -20,13 +20,13 @@ namespace ft
 		typedef typename allocator_type::const_reference		const_reference;
 		typedef typename allocator_type::pointer						pointer;
 		typedef typename allocator_type::const_pointer			const_pointer;
-		typedef typename ft::MapIterator<value_type, false>	iterator;
-		typedef typename ft::MapIterator<value_type, true>	const_iterator;
+		typedef typename ft::SetIterator<value_type, false>	iterator;
+		typedef typename ft::SetIterator<value_type, true>	const_iterator;
 		typedef ft::reverse_iterator<iterator>							reverse_iterator;
 		typedef ft::reverse_iterator<const_iterator>				const_reverse_iterator;
 		typedef typename allocator_type::difference_type		difference_type;
 		typedef typename allocator_type::size_type					size_type;
-		typedef ft::RBTree<value_type, value_compare>				rb_tree;
+		typedef ft::SetTree<value_type, value_compare>			rb_tree;
 		typedef ft::RBTreeNode<value_type>									node_type;
 
 		/**
