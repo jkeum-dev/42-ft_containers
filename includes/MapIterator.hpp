@@ -10,7 +10,7 @@ namespace ft
 	class MapIterator : public ft::iterator<ft::bidirectional_iterator_tag, T>
 	{
 	public :
-		typedef T																																						value_type;
+		typedef const T																																			value_type;
 		typedef typename ft::choose<B, const T*, T*>::type																	pointer;
 		typedef typename ft::choose<B, const T&, T&>::type																	reference;
 		typedef typename ft::iterator<ft::bidirectional_iterator_tag, T>::difference_type		difference_type;
@@ -40,13 +40,9 @@ namespace ft
 			else {	// if right_child doesn't exist,
 				tmp = _node->parent;
 				if (tmp->right_child == _node) {	// if current node is right_child,
-					while (true) {
+					while (tmp->parent->right_child == tmp)
 						tmp = tmp->parent;
-						if (tmp->value == ft_nullptr)	// tmp is root
-							break;
-						if (tmp->left_child == _node->parent)
-							break;
-					}
+					tmp = tmp->parent;
 				}
 			}
 			_node = tmp;
@@ -67,13 +63,9 @@ namespace ft
 			else {	// if left_child doesn't exist,
 				tmp = _node->parent;
 				if (tmp->left_child == _node) {	// if current node is left_child,
-					while (true) {
+					while (tmp->parent->left_child == tmp)
 						tmp = tmp->parent;
-						if (tmp->value == ft_nullptr)	// tmp is root
-							break;
-						if (tmp->right_child == _node->parent)
-							break;
-					}
+					tmp = tmp->parent;
 				}
 			}
 			_node = tmp;

@@ -20,10 +20,10 @@ namespace ft
 		/**
 		 * @brief Member types
 		 */
-		typedef Key																		key_type;
-		typedef T																			mapped_type;
-		typedef ft::pair<const key_type, mapped_type>	value_type;
-		typedef Compare																key_compare;
+		typedef const Key												key_type;
+		typedef T																mapped_type;
+		typedef ft::pair<key_type, mapped_type>	value_type;
+		typedef Compare													key_compare;
 
 		class value_compare : binary_function<value_type, value_type, bool> {
 		protected:

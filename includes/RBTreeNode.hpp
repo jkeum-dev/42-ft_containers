@@ -13,12 +13,12 @@ namespace ft
 		typedef T						value_type;
 		typedef RBTreeNode*	node;
 
-		T*			value;
-		node		left_child;
-		node		right_child;
-		node		parent;
-		RBColor	color;
-		Alloc		alloc;
+		value_type*	value;
+		node				left_child;
+		node				right_child;
+		node				parent;
+		RBColor			color;
+		Alloc				alloc;
 
 		RBTreeNode() : value(ft_nullptr), left_child(ft_nullptr), right_child(ft_nullptr),
 									parent(ft_nullptr), color(BLACK), alloc(Alloc()) {}
