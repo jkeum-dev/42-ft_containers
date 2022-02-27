@@ -31,5 +31,4 @@
 *.out
 *.app
 
-containers_test/*
-ft_containers_tests/*
+tester/*
