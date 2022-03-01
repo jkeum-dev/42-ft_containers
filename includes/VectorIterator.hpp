@@ -54,52 +54,52 @@ namespace ft
 	 * @brief Relational operators
 	 */
 	template <typename T>
-	bool operator==(const VectorIterator<T>& lIter, const VectorIterator<T>& rIter) { return lIter.base() == rIter.base(); }
+	inline bool operator==(const VectorIterator<T>& lIter, const VectorIterator<T>& rIter) { return lIter.base() == rIter.base(); }
 	
 	template <typename T, typename T_c>	// compare with const_iterator
-	bool operator==(const VectorIterator<T>& lIter, const VectorIterator<T_c>& rIter) { return lIter.base() == rIter.base(); }
+	inline bool operator==(const VectorIterator<T>& lIter, const VectorIterator<T_c>& rIter) { return lIter.base() == rIter.base(); }
 	
 	template <typename T>
-	bool operator!=(const VectorIterator<T>& lIter, const VectorIterator<T>& rIter) { return lIter.base() != rIter.base(); }
+	inline bool operator!=(const VectorIterator<T>& lIter, const VectorIterator<T>& rIter) { return lIter.base() != rIter.base(); }
 	
 	template <typename T, typename T_c>	// compare with const_iterator
-	bool operator!=(const VectorIterator<T>& lIter, const VectorIterator<T_c>& rIter) { return lIter.base() != rIter.base(); }
+	inline bool operator!=(const VectorIterator<T>& lIter, const VectorIterator<T_c>& rIter) { return lIter.base() != rIter.base(); }
 	
 	template <typename T>
-	bool operator<(const VectorIterator<T>& lIter, const VectorIterator<T>& rIter) { return lIter.base() < rIter.base(); }
+	inline bool operator<(const VectorIterator<T>& lIter, const VectorIterator<T>& rIter) { return lIter.base() < rIter.base(); }
 	
 	template <typename T, typename T_c>	// compare with const_iterator
-	bool operator<(const VectorIterator<T>& lIter, const VectorIterator<T_c>& rIter) { return lIter.base() < rIter.base(); }
+	inline bool operator<(const VectorIterator<T>& lIter, const VectorIterator<T_c>& rIter) { return lIter.base() < rIter.base(); }
 	
 	template <typename T>
-	bool operator>(const VectorIterator<T>& lIter, const VectorIterator<T>& rIter) { return lIter.base() > rIter.base(); }
+	inline bool operator>(const VectorIterator<T>& lIter, const VectorIterator<T>& rIter) { return lIter.base() > rIter.base(); }
 	
 	template <typename T, typename T_c>	// compare with const_iterator
-	bool operator>(const VectorIterator<T>& lIter, const VectorIterator<T_c>& rIter) { return lIter.base() > rIter.base(); }
+	inline bool operator>(const VectorIterator<T>& lIter, const VectorIterator<T_c>& rIter) { return lIter.base() > rIter.base(); }
 	
 	template <typename T>
-	bool operator<=(const VectorIterator<T>& lIter, const VectorIterator<T>& rIter) { return lIter.base() <= rIter.base(); }
+	inline bool operator<=(const VectorIterator<T>& lIter, const VectorIterator<T>& rIter) { return lIter.base() <= rIter.base(); }
 	
 	template <typename T, typename T_c>	// compare with const_iterator
-	bool operator<=(const VectorIterator<T>& lIter, const VectorIterator<T_c>& rIter) { return lIter.base() <= rIter.base(); }
+	inline bool operator<=(const VectorIterator<T>& lIter, const VectorIterator<T_c>& rIter) { return lIter.base() <= rIter.base(); }
 	
 	template <typename T>
-	bool operator>=(const VectorIterator<T>& lIter, const VectorIterator<T>& rIter) { return lIter.base() >= rIter.base(); }
+	inline bool operator>=(const VectorIterator<T>& lIter, const VectorIterator<T>& rIter) { return lIter.base() >= rIter.base(); }
 	
 	template <typename T, typename T_c>	// compare with const_iterator
-	bool operator>=(const VectorIterator<T>& lIter, const VectorIterator<T_c>& rIter) { return lIter.base() >= rIter.base(); }
+	inline bool operator>=(const VectorIterator<T>& lIter, const VectorIterator<T_c>& rIter) { return lIter.base() >= rIter.base(); }
 
 	// n + iter
 	template <typename T>
-	VectorIterator<T> operator+(typename VectorIterator<T>::difference_type n, const VectorIterator<T> &iter) { return VectorIterator<T>(iter + n); }
+	inline VectorIterator<T> operator+(typename VectorIterator<T>::difference_type n, const VectorIterator<T> &iter) { return VectorIterator<T>(iter + n); }
 
 	// iterator - iterator
 	template <typename T>
-	typename VectorIterator<T>::difference_type operator-(const VectorIterator<T>& lIter, const VectorIterator<T>& rIter) { return lIter.base() - rIter.base(); }
+	inline typename VectorIterator<T>::difference_type operator-(const VectorIterator<T>& lIter, const VectorIterator<T>& rIter) { return lIter.base() - rIter.base(); }
 
 	// iterator - const_iterator
 	template <typename T, typename T_c>
-	typename VectorIterator<T>::difference_type operator-(const VectorIterator<T>& lIter, const VectorIterator<T_c>& rIter) { return lIter.base() - rIter.base(); }
+	inline typename VectorIterator<T>::difference_type operator-(const VectorIterator<T>& lIter, const VectorIterator<T_c>& rIter) { return lIter.base() - rIter.base(); }
 }	// namespace ft
 
 #endif

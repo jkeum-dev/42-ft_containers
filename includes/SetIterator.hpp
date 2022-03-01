@@ -77,8 +77,8 @@ namespace ft
 		/**
 		 * @brief Relational operators
 		 */
-		bool operator==(const SetIterator& iter) { return _node == iter.base(); }
-		bool operator!=(const SetIterator& iter) { return _node != iter.base(); }
+		inline bool operator==(const SetIterator& iter) { return _node == iter.base(); }
+		inline bool operator!=(const SetIterator& iter) { return _node != iter.base(); }
 
 	protected :
 		node_type* _node;

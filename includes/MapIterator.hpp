@@ -76,8 +76,8 @@ namespace ft
 		/**
 		 * @brief Relational operators
 		 */
-		bool operator==(const MapIterator& iter) { return _node == iter.base(); }
-		bool operator!=(const MapIterator& iter) { return _node != iter.base(); }
+		inline bool operator==(const MapIterator& iter) { return _node == iter.base(); }
+		inline bool operator!=(const MapIterator& iter) { return _node != iter.base(); }
 
 	protected :
 		node_type* _node;
