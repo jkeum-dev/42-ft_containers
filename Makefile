@@ -1,35 +1,65 @@
-NAME = ft_containers
-
 CC = clang++
-CFLAGS = -Wall -Wextra -Werror -std=c++98 #-g3 -fsanitize=address
-
-OBJS_DIR = ./objs
+CFLAGS = -Wall -Wextra -Werror -std=c++98
 
 INC_DIR = ./includes
-
-SRCS =	main.cpp
-
-OBJS = $(addprefix $(OBJS_DIR)/, $(notdir $(SRCS:.cpp=.o)))
+TESTER_DIR = ./mytester
+TESTER_LOG_DIR = ./mytester/log
 
 RM = rm -f
 
-all : $(NAME)
+STD = std
+FT = ft
+CONT = vector_test
+TIME = time
 
-$(NAME) : $(OBJS)
-	$(CC) $(CFLAGS) -o $@ $^
+ifeq ($(TESTED_NAMESPACE),)
+TESTED_NAMESPACE = ft
+endif
 
-$(OBJS_DIR) :
-	@mkdir -p $(OBJS_DIR)
+all :
+	@make start
+	@make test
 
-$(OBJS_DIR)/%.o : %.cpp | $(OBJS_DIR)
-	@$(CC) $(CFLAGS) -o $@ -I$(INC_DIR) -c $^
+start :
+	@$(TESTER_DIR)/mytest.sh
+
+test :
+	@make mytest CONT=vector_test
+	@make mytest CONT=stack_test
+	@make mytest CONT=map_test
+	@make mytest CONT=set_test
+
+mytest :
+	@mkdir -p $(TESTER_LOG_DIR)
+	@$(CC) $(CFLAGS) $(TESTER_DIR)/$(CONT).cpp -o $(CONT) -I$(INC_DIR) -DTESTED_NAMESPACE=$(FT)
+	@./$(CONT) > $(TESTER_LOG_DIR)/$(FT)_$(CONT)
+	@$(CC) $(CFLAGS) $(TESTER_DIR)/$(CONT).cpp -o $(CONT) -I$(INC_DIR) -DTESTED_NAMESPACE=$(STD)
+	@./$(CONT) > $(TESTER_LOG_DIR)/$(STD)_$(CONT)
+	@diff $(TESTER_LOG_DIR)/$(STD)_$(CONT) $(TESTER_LOG_DIR)/$(FT)_$(CONT)
+	@rm $(CONT)
+	@$(TESTER_DIR)/compare.sh $(CONT)
+
+time :
+	@make time_unit CONT=vector_test
+	@make time_unit CONT=stack_test
+	@make time_unit CONT=map_test
+	@make time_unit CONT=set_test
+
+time_unit :
+	@$(CC) $(CFLAGS) $(TESTER_DIR)/$(CONT).cpp -o $(CONT) -I$(INC_DIR) -DTESTED_NAMESPACE=$(FT)
+	@printf "\n=====\t$(CONT)\t====="
+	@printf "\ntime 'FT'"
+	@$(TIME) ./$(CONT) > $(TESTER_LOG_DIR)/$(FT)_$(CONT)
+	@$(CC) $(CFLAGS) $(TESTER_DIR)/$(CONT).cpp -o $(CONT) -I$(INC_DIR) -DTESTED_NAMESPACE=$(STD)
+	@printf "time 'STD'"
+	@$(TIME) ./$(CONT) > $(TESTER_LOG_DIR)/$(STD)_$(CONT)
+	@rm $(CONT)
 
 clean :
-	@$(RM) -r $(OBJS_DIR)
+	@$(RM) -r $(TESTER_LOG_DIR)
 
 fclean : clean
-	@$(RM) $(NAME)
 
 re : fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re start test mytest time time_unit
