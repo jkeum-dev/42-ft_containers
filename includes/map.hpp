@@ -136,6 +136,8 @@ namespace ft
 		// Allocator:
 		allocator_type get_allocator() const { return _alloc; }
 
+		void showTree() { _tree.showMap(); }
+
 		/**
 		 * @brief Member variables
 		 */

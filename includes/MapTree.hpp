@@ -3,6 +3,7 @@
 
 #include <stdexcept>
 #include "MapIterator.hpp"
+#include "printTree.hpp"
 
 namespace ft
 {
@@ -216,6 +217,8 @@ namespace ft
 			}
 			return it.base();
 		}
+
+		void showMap() { ft::printMap(_root, 0); }
 
 	private :
 		node_type* get_grandparent(node_type* node) const {

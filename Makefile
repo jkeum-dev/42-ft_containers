@@ -39,6 +39,11 @@ mytest :
 	@rm $(CONT)
 	@$(TESTER_DIR)/compare.sh $(CONT)
 
+print :
+	@$(CC) $(CFLAGS) $(TESTER_DIR)/print_RBtree.cpp -o map -I$(INC_DIR)
+	@./map
+	@rm map
+
 time :
 	@make time_unit CONT=vector_test
 	@make time_unit CONT=stack_test
