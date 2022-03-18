@@ -88,6 +88,7 @@ namespace ft
 		// Capacity:
 		bool empty() const { return _size == 0; }
 		size_type size() const { return _size; }
+		size_type max_size() const { return _node_alloc.max_size(); }
 
 		// Element access:
 		ft::pair<node_type*, bool> insert(const value_type& val, node_type* hint = ft_nullptr) {
